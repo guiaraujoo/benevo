@@ -1,5 +1,8 @@
-package main.java.com.benevo.repository;
+package com.benevo.repository;
 
-public class ItemRepository {
-    
+import org.springframework.data.jpa.repository.JpaRepository;
+import com.benevo.model.Item;
+
+public interface ItemRepository extends JpaRepository<Item, Integer> {
 }
+

@@ -1,4 +1,5 @@
-package main.java.com.benevo.dto;
+package com.benevo.dto;
+
 
 public class ItemCadastroDTO {
     
