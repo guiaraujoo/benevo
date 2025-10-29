@@ -19,7 +19,7 @@ public class LoginRequestDTO {
     public String getSenha() { //get senha, mesma logica
         return senha;
     }
-    public void setSenha(String senha) {
+    public void setSenha(String senha) { // set senha, mesma logica
         this.senha = senha;
     }
 }
