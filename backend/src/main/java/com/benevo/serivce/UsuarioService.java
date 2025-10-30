@@ -5,6 +5,8 @@ import com.benevo.repository.UsuarioRepository; // o acesso pro banco q peu crio
 import org.springframework.beans.factory.annotation.Autowired; // o spring pra conectar
 import org.springframework.stereotype.Service; // a etiqueta de servico
 
+import java.util.Optional;
+
 // a etiqueta @Service diz pro spring que essa classe cuida das RN
 @Service
 public class UsuarioService {
@@ -19,13 +21,13 @@ public class UsuarioService {
     // @return true se o login for valido, false se não for
 
     public boolean autenticar(String login, String senha) {
-
-        // pede ao repo de peu pra buscar o usuario no banco pelo login, pergunta a ele o comando certo
-        Usuario usuarioDoBanco = usuarioRepository.UsuarioRepository(login);
+        // Pede ao repo de peu pra buscar o usuario no banco pelo login
+        Optional<Usuario> usuarioOpt = usuarioRepository.findByLogin(login);
 
         // verifica oq peu retornou
-        if (usuarioDoBanco != null) {
-            // se achou um usuario verifica a senha com checagem simples, dps usa criptografia
+        if (usuarioOpt.isPresent()) {
+            Usuario usuarioDoBanco = usuarioOpt.get();
+            // se achou um usuario verifica a senha com checagem simples
             if (usuarioDoBanco.getSenha().equals(senha)) {
                 // a senha bateu e pode ser autenticado
                 return true;
@@ -35,9 +37,8 @@ public class UsuarioService {
             }
         }
 
-        // se o usuario for nulo, nao achou ngm do banco
+        // se o usuarioOpt for vazio, nao achou ngm do banco
         return false;
-
     }
 
     // a partir daqui segue com cadastrar usuario, etc com a mesma logica

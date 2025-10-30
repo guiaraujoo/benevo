@@ -1,18 +1,36 @@
 package com.benevo.model;
 
-import org.springframework.data.annotation.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.annotation.Id;
 
-@Document(collection = "usuario") // nome da coleção MongoDB
+@Document(collection = "usuario")
 public class Usuario {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
-
     private String login;
     private String senha;
 
-    // getters e setters
+    public Usuario() {
+    }
+
+    public Usuario(String id, String login, String senha){
+        this.id = id;
+        this.login = login;
+        this.senha = senha;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getLogin() {
         return login;
     }

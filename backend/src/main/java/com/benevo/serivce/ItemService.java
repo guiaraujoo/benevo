@@ -1,4 +1,4 @@
-package com.benevo.service;
+package com.benevo.serivce;
 
 import com.benevo.dto.ItemCadastroDTO;
 import com.benevo.model.Item;
@@ -27,12 +27,12 @@ public class ItemService {
     }
 
     // BUSCAR POR ID
-    public Optional<Item> buscarPorId(Integer id) {
+    public Optional<Item> buscarPorId(String id) {
         return itemRepository.findById(id);
     }
 
     // ATUALIZAR ITEM
-    public Item atualizarItem(Integer id, ItemCadastroDTO dto) {
+    public Item atualizarItem(String id, ItemCadastroDTO dto) {
         Optional<Item> itemOpt = itemRepository.findById(id);
 
         if (itemOpt.isEmpty()) {
@@ -53,7 +53,7 @@ public class ItemService {
     }
 
     //  DELETAR ITEM
-    public boolean deletarItem(Integer id) {
+    public boolean deletarItem(String id) {
         if (itemRepository.existsById(id)) {
             itemRepository.deleteById(id);
             return true;

@@ -1,4 +1,4 @@
-package main.java.com.benevo.dto;
+package com.benevo.dto;
 
 // dto = data transfer object (objeto de transferencia de dados)
 // isso vai ficar tipo um molde do que dheff vai te enviar. pro login so precisa ter 2 campos.

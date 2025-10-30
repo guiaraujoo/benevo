@@ -6,3 +6,5 @@
 *.log
 .env
 .venv
+
+application.properties

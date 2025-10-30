@@ -1,10 +1,10 @@
 package com.benevo.repository;
 
+import org.springframework.data.mongodb.repository.MongoRepository;
 import com.benevo.model.Usuario;
-import org.springframework.data.jpa.repository.JpaRepository;
-import com.benevo.model.Item;
+import java.util.Optional;
 
-public interface UsuarioRepository extends JpaRepository<Item, Integer> {
-    Usuario UsuarioRepository(String login);
+public interface UsuarioRepository extends MongoRepository<Usuario, String> {
+    Optional<Usuario> findByLogin(String login);
 }
 

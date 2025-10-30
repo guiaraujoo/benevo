@@ -1,36 +1,25 @@
 package com.benevo.model;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.annotation.Id;
 import jakarta.persistence.*;
 
-@Table(name = "item")
-@Entity
+@Document(collection = "itens")
 public class Item {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
-
-    @Column(name = "Nome", unique = true)
+    private String id;
     private String nome;
-
-    @Column(name = "Categoria")
     private String categoria;
-
-    @Column(name = "Condição")
     private String condicao;
-
-    @Column(name = "Tamanho")
     private String tamanho;
-
-    @Column(name = "Descricao")
     private String descricao;
 
-    // Construtor padrão
     public Item() {
     }
 
-    // Construtor com todos os campos
-    public Item(Integer id, String nome, String categoria, String condicao, String tamanho, String descricao) {
+    public Item(String id, String nome, String categoria, String condicao, String tamanho, String descricao) {
         this.id = id;
         this.nome = nome;
         this.categoria = categoria;
@@ -39,12 +28,11 @@ public class Item {
         this.descricao = descricao;
     }
 
-    // Getters e Setters
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

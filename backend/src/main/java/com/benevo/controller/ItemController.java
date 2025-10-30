@@ -2,7 +2,7 @@ package com.benevo.controller;
 
 import com.benevo.dto.ItemCadastroDTO;
 import com.benevo.model.Item;
-import com.benevo.service.ItemService;
+import com.benevo.serivce.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -52,7 +52,7 @@ public class ItemController {
 
     // BUSCAR ITEM POR ID
     @GetMapping("/{id}")
-    public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
+    public ResponseEntity<?> buscarPorId(@PathVariable String id) {
         Optional<Item> itemOpt = itemService.buscarPorId(id);
 
         if (itemOpt.isPresent()) {
@@ -64,7 +64,7 @@ public class ItemController {
 
     // ATUALIZAR ITEM
     @PutMapping("/atualizar/{id}")
-    public ResponseEntity<?> atualizarItem(@PathVariable Integer id, @RequestBody ItemCadastroDTO dto) {
+    public ResponseEntity<?> atualizarItem(@PathVariable String id, @RequestBody ItemCadastroDTO dto) {
         try {
             Item atualizado = itemService.atualizarItem(id, dto);
             return ResponseEntity.ok(atualizado);
@@ -77,7 +77,7 @@ public class ItemController {
 
     //  DELETAR ITEM
     @DeleteMapping("/deletar/{id}")
-    public ResponseEntity<String> deletarItem(@PathVariable Integer id) {
+    public ResponseEntity<String> deletarItem(@PathVariable String id) {
         boolean removido = itemService.deletarItem(id);
 
         if (removido) {

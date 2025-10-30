@@ -1,9 +1,7 @@
-package main.java.com.benevo.controller;
+package com.benevo.controller;
 
-import com.movimentoinspire.benevo.dto.LoginRequestDTO;
-// precisa importar o que lingui fez no usuario service, ent fala com ele
-import com.movimentoinspire.benevo.service.UsuarioService;
-
+import com.benevo.dto.LoginRequestDTO;
+import com.benevo.serivce.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,8 +38,5 @@ public class AuthController {
             // se deu invalido retorna pra dheff com status 401 - nao autorizado. da uma pesquisada sobre os numeros dos status tbm
             return ResponseEntity.status(401).body("login e/ou senha inválidos");
         }
-        
-        // por enquanto so retorna ok pro endpoint dele pra testar, quando for evoluindo vai melhorando o tratamento
-        return ResponseEntity.ok("Endpoint /auth/login funcionando");
     }
 }
