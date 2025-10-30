@@ -1,10 +1,13 @@
-package com.benevo.serivce;
+package com.benevo.service;
 
-
+import com.benevo.dto.ItemCadastroDTO;
 import com.benevo.model.Item;
 import com.benevo.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ItemService {
@@ -12,43 +15,71 @@ public class ItemService {
     @Autowired
     private ItemRepository itemRepository;
 
-    // ita chama essa funcao pra validar os itens
-    // @param item - objeto Item que veio do formulario
-    // @return - Item que foi salvo no banco ja com o id
+    // REGISTRAR ITEM
     public Item registrarItem(Item item) {
-
-        // aplicar RNs pra verificar se o item é valido?
-
-        // RN not null
-        if (item.getNome() == null || item.getNome().trim().isEmpty()) {
-            // lança uma excecao depois, por agora da p retornar null
-            return null;
-        }
-
-        if (item.getCategoria() == null || item.getCategoria().trim().isEmpty()) {
-            return null;
-        }
-
-        if (item.getCondicao() == null || item.getCondicao().trim().isEmpty()) {
-            return null; // Deu errado
-        }
-
-        if (item.getTamanho() == null || item.getTamanho().trim().isEmpty()) {
-            return null; // Deu errado
-        }
-
-        if (item.getDescricao() == null || item.getDescricao().trim().isEmpty()) {
-            return null; // Deu errado
-        }
-
-        // se o item passou nas validacoes, salva no repositorio de peu
-        Item itemSalvo = itemRepository.save(item);
-
-        // retorna o item salvo
-        return itemSalvo;
-
+        validarItem(item);
+        return itemRepository.save(item);
     }
 
-    // depois vai ter funcao p excluir, editar, etc, dnv com a mesma logica
-}
+    // LISTAR TODOS
+    public List<Item> listarTodos() {
+        return itemRepository.findAll();
+    }
 
+    // BUSCAR POR ID
+    public Optional<Item> buscarPorId(Integer id) {
+        return itemRepository.findById(id);
+    }
+
+    // ATUALIZAR ITEM
+    public Item atualizarItem(Integer id, ItemCadastroDTO dto) {
+        Optional<Item> itemOpt = itemRepository.findById(id);
+
+        if (itemOpt.isEmpty()) {
+            throw new RuntimeException("Item com ID " + id + " não encontrado.");
+        }
+
+        Item item = itemOpt.get();
+
+        // Atualiza apenas os campos permitidos
+        item.setNome(dto.getNome());
+        item.setCategoria(dto.getCategoria());
+        item.setCondicao(dto.getCondicao());
+        item.setTamanho(dto.getTamanho());
+        item.setDescricao(dto.getDescricao());
+
+        validarItem(item);
+        return itemRepository.save(item);
+    }
+
+    //  DELETAR ITEM
+    public boolean deletarItem(Integer id) {
+        if (itemRepository.existsById(id)) {
+            itemRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
+    //  Validação de regras de negócio
+    private void validarItem(Item item) {
+        if (isNullOrEmpty(item.getNome()))
+            throw new IllegalArgumentException("O nome do item é obrigatório.");
+
+        if (isNullOrEmpty(item.getCategoria()))
+            throw new IllegalArgumentException("A categoria é obrigatória.");
+
+        if (isNullOrEmpty(item.getCondicao()))
+            throw new IllegalArgumentException("A condição é obrigatória.");
+
+        if (isNullOrEmpty(item.getTamanho()))
+            throw new IllegalArgumentException("O tamanho é obrigatório.");
+
+        if (isNullOrEmpty(item.getDescricao()))
+            throw new IllegalArgumentException("A descrição é obrigatória.");
+    }
+
+    private boolean isNullOrEmpty(String valor) {
+        return valor == null || valor.trim().isEmpty();
+    }
+}

@@ -1,89 +1,93 @@
-package main.java.com.benevo.controller;
+package com.benevo.controller;
 
+import com.benevo.dto.ItemCadastroDTO;
+import com.benevo.model.Item;
+import com.benevo.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.seuprojeto.api.dto.ItemRequestDTO;
-import com.seuprojeto.api.service.ItemService;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/item")
-@CrossOrigin("*") 
+@CrossOrigin("*")
 public class ItemController {
-    
-@Autowired
-private ItemService itemService;
 
+    @Autowired
+    private ItemService itemService;
+
+    // CADASTRAR ITEM
     @PostMapping("/cadastrar")
-    public ResponseEntity<String> cadastrarItem(@RequestBody ItemRequestDTO itemDTO) {
+    public ResponseEntity<?> cadastrarItem(@RequestBody ItemCadastroDTO dto) {
+        System.out.println("Tentativa de cadastro do item: " + dto.getNome());
 
-       
-        System.out.println("Tentativa de cadastro do item: " + itemDTO.getNome());
+        try {
+            Item item = new Item(
+                    null,
+                    dto.getNome(),
+                    dto.getCategoria(),
+                    dto.getCondicao(),
+                    dto.getTamanho(),
+                    dto.getDescricao()
+            );
 
-        
-        boolean cadastrado = itemService.cadastrarItem(itemDTO);
-
-        if (cadastrado) {
-            return ResponseEntity.ok("Item cadastrado com sucesso!");
-        } else {
-            
-            return ResponseEntity.status(400).body("Erro ao cadastrar o item.");
+            Item itemSalvo = itemService.registrarItem(item);
+            return ResponseEntity.ok(itemSalvo);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("Erro inesperado ao cadastrar o item.");
         }
     }
 
- 
-    // @GetMapping("/listar")
-    // public ResponseEntity<?> listarItens() {
+    // LISTAR TODOS OS ITENS
+    @GetMapping("/listar")
+    public ResponseEntity<List<Item>> listarItens() {
+        List<Item> itens = itemService.listarTodos();
+        return ResponseEntity.ok(itens);
+    }
 
-       
-    //     var lista = itemService.listarItens();
+    // BUSCAR ITEM POR ID
+    @GetMapping("/{id}")
+    public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
+        Optional<Item> itemOpt = itemService.buscarPorId(id);
 
-    
-    //     return ResponseEntity.ok(lista);
-    // }
+        if (itemOpt.isPresent()) {
+            return ResponseEntity.ok(itemOpt.get());
+        } else {
+            return ResponseEntity.status(404).body("Item não encontrado.");
+        }
+    }
 
-   
-    // @GetMapping("/{id}")
-    // public ResponseEntity<?> buscarPorId(@PathVariable Long id) {
+    // ATUALIZAR ITEM
+    @PutMapping("/atualizar/{id}")
+    public ResponseEntity<?> atualizarItem(@PathVariable Integer id, @RequestBody ItemCadastroDTO dto) {
+        try {
+            Item atualizado = itemService.atualizarItem(id, dto);
+            return ResponseEntity.ok(atualizado);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
 
-        
-    //     var item = itemService.buscarPorId(id);
+    //  DELETAR ITEM
+    @DeleteMapping("/deletar/{id}")
+    public ResponseEntity<String> deletarItem(@PathVariable Integer id) {
+        boolean removido = itemService.deletarItem(id);
 
-    //     if (item != null) {
-    //         return ResponseEntity.ok(item);
-    //     } else {
-           
-    //         return ResponseEntity.status(404).body("Item não encontrado.");
-    //     }
-    // }
-
-
-    // @DeleteMapping("/{id}")
-    // public ResponseEntity<String> deletarItem(@PathVariable Long id) {
-
-    //     boolean deletado = itemService.deletarItem(id);
-
-    //     if (deletado) {
-    //         return ResponseEntity.ok("Item deletado com sucesso!");
-    //     } else {
-    //         return ResponseEntity.status(404).body("Item não encontrado para exclusão.");
-    //     }
-    // }
-
-
-    // @PutMapping("/{id}")
-    // public ResponseEntity<String> atualizarItem(@PathVariable Long id, @RequestBody ItemRequestDTO itemDTO) {
-
-    //     boolean atualizado = itemService.atualizarItem(id, itemDTO);
-
-    //     if (atualizado) {
-    //         return ResponseEntity.ok("Item atualizado com sucesso!");
-    //     } else {
-    //         return ResponseEntity.status(404).body("Item não encontrado para atualização.");
-    //     }
-    // }
+        if (removido) {
+            return ResponseEntity.ok("Item removido com sucesso!");
+        } else {
+            return ResponseEntity.status(404).body("Item não encontrado.");
+        }
+    }
 }
+
     
 
 
