@@ -1,4 +1,4 @@
-package main.java.com.benevo.serivce;
+package com.benevo.serivce;
 
 public class RelatorioService {
     

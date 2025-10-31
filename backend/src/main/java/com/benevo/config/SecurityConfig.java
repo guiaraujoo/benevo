@@ -1,5 +1,4 @@
-package main.java.com.benevo.config;
+package com.benevo.config;
 
 public class SecurityConfig {
-    
 }

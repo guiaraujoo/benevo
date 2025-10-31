@@ -1,4 +1,4 @@
-package main.java.com.benevo.controller;
+package com.benevo.controller;
 
 public class DoadorController {
 

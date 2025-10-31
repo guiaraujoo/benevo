@@ -1,5 +1,9 @@
-package main.java.com.benevo.repository;
+package com.benevo.repository;
 
-public class ItemRepository {
-    
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
+import com.benevo.model.Item;
+
+@Repository
+public interface ItemRepository extends MongoRepository<Item, String> {
 }
