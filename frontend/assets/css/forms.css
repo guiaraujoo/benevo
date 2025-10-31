@@ -1,0 +1,186 @@
+
+.card-login {
+  background-color: #1d3752;
+  border-radius: 40px;
+  padding: 50px 60px;
+  box-shadow: 5px 7px 15px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.3s ease;
+  top: 50%;
+}
+
+.card-login:hover {
+  transform: translateY(-3px);
+}
+
+#form-login {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+}
+
+#form-login label {
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+}
+
+#form-login input {
+  width: 260px;
+  padding: 10px 14px;
+  border: 1.5px solid #ccc;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  outline: none;
+  transition: all 0.3s ease;
+  background-color: #f5f5f5;
+}
+
+#form-login input:focus {
+  border-color: #d9b38c;
+  box-shadow: 0 0 4px #d9b38c;
+}
+
+.btn-entrar {
+  margin-top: 25px;
+  background-color: #1d3752;
+  color: #d9b38c;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 40px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.25);
+}
+
+.btn-entrar:hover {
+  background-color: #fff;
+  color: #1d3752;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 480px) {
+  .card-login {
+    padding: 25px 30px;
+    width: 80%;
+  }
+
+  #form-login input {
+    width: 100%;
+  }
+
+  .btn-entrar {
+    width: 100%;
+    padding: 10px 0;
+  }
+}
+
+
+.card-doacao {
+  background-color: #1f3a56;
+  border-radius: 30px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  width: 500px;
+  margin: 50px auto 0;
+  padding: 25px 30px;
+  text-align: left;
+  transition: all 0.3s ease;
+}
+
+.card-doacao h2 {
+  text-align: center;
+  color: #bba284;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+
+#form-doacao label {
+  display: block;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 5px;
+  font-size: 13px;
+}
+
+#form-doacao input,
+#form-doacao select,
+#form-doacao textarea {
+  width: 100%;
+  padding: 8px 10px;
+  margin-bottom: 12px;
+  border: none;
+  border-radius: 20px;
+  font-size: 13px;
+  font-family: "Poppins", sans-serif;
+  outline: none;
+}
+
+.linha-dupla {
+  display: flex;
+  gap: 10px;
+}
+
+.campo {
+  flex: 1;
+}
+
+#form-doacao textarea {
+  resize: none;
+  height: 70px;
+}
+
+.texto-fotos {
+  color: #fff;
+  font-size: 13px;
+  margin-top: 10px;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.upload-container {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.upload-box {
+  background-color: #d9d9d9;
+  color: #1f3a56;
+  font-size: 20px;
+  border-radius: 10px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.btn-finalizar {
+  display: block;
+  width: 60%;
+  margin: 0 auto;
+  padding: 8px 0;
+  background-color: #1f3a56;
+  color: #bba284;
+  border: none;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+  transition: 0.2s ease-in-out;
+}
+
+.btn-finalizar:hover {
+  background-color: #264666;
+}
