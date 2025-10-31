@@ -2,13 +2,11 @@ package com.benevo.model;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.annotation.Id;
-import jakarta.persistence.*;
 
 @Document(collection = "itens")
 public class Item {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
     private String nome;
     private String categoria;
@@ -31,48 +29,49 @@ public class Item {
     public String getId() {
         return id;
     }
-
     public void setId(String id) {
         this.id = id;
     }
-
     public String getNome() {
         return nome;
     }
-
     public void setNome(String nome) {
         this.nome = nome;
     }
-
     public String getCategoria() {
         return categoria;
     }
-
     public void setCategoria(String categoria) {
         this.categoria = categoria;
     }
-
     public String getCondicao() {
         return condicao;
     }
-
     public void setCondicao(String condicao) {
         this.condicao = condicao;
     }
-
     public String getTamanho() {
         return tamanho;
     }
-
     public void setTamanho(String tamanho) {
         this.tamanho = tamanho;
     }
-
     public String getDescricao() {
         return descricao;
     }
-
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    @Override
+    public String toString() {
+        return "Item{" +
+                "id='" + id + '\'' +
+                ", nome='" + nome + '\'' +
+                ", categoria='" + categoria + '\'' +
+                ", condicao='" + condicao + '\'' +
+                ", tamanho='" + tamanho + '\'' +
+                ", descricao='" + descricao + '\'' +
+                '}';
     }
 }

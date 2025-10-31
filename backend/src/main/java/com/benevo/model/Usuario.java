@@ -1,7 +1,5 @@
 package com.benevo.model;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.annotation.Id;
 
@@ -9,7 +7,6 @@ import org.springframework.data.annotation.Id;
 public class Usuario {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
     private String login;
     private String senha;
