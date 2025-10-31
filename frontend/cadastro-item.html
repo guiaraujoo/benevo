@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Benevo - Doação</title>
+
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="assets/css/forms.css" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Shrikhand&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header class="header">
+    <h1 class="logo">benevo</h1>
+  </header>
+  <main>
+    <div class="titulo-container">
+      <a href="index.html" class="btn-voltar"><</a>
+      <h2 class="titulo">Sua Doação</h2>
+    </div>
+    <br>
+    <br>
+    <br>
+    <div class="card-doacao">
+      <form id="form-doacao">
+        <label for="nome">Nome do produto:</label>
+        <input type="text" id="nome" placeholder="Digite o nome do produto" required />
+
+        <div class="linha-dupla">
+          <div class="campo">
+            <label for="categoria">Categoria:</label>
+            <select id="categoria" required>
+              <option value="">N/A</option>
+              <option value="roupa">Roupa</option>
+              <option value="calçado">Calçado</option>
+              <option value="outro">Outro</option>
+            </select>
+          </div>
+
+          <div class="campo">
+            <label for="tamanho">Tamanho:</label>
+            <select id="tamanho" required>
+              <option value="">N/A</option>
+              <option value="p">P</option>
+              <option value="m">M</option>
+              <option value="g">G</option>
+              <option value="gg">GG</option>
+            </select>
+          </div>
+        </div>
+
+        <label for="motivo">Motivo da doação:</label>
+        <textarea id="motivo" maxlength="1000" placeholder="Digite aqui.." required></textarea>
+
+        <p class="texto-fotos">Envie aqui as fotos do produto</p>
+
+        <div class="upload-container">
+          <div class="upload-box">+</div>
+          <div class="upload-box">+</div>
+          <div class="upload-box">+</div>
+        </div>
+      </form>
+    </div>
+    <button class="btn-entrar">Finalizar Doação</button>
+  </main>
+</body>
+</html>
