@@ -1,20 +1,34 @@
-// Pega o formulário pelo ID
-const formLogin = document.getElementById("form-login");
+// IMPORTANTE: Adicione esta linha no topo do arquivo.
+import { fazerLogin } from '../services/api.js';
 
-// Adiciona o ouvinte de envio
-formLogin.addEventListener("submit", (event) => {
-  event.preventDefault(); // Impede o envio automático
+document.addEventListener("DOMContentLoaded", function () {
+    
+    const formLogin = document.getElementById('form-login');
 
-  // Pega os valores dos campos
-  const login = document.getElementById("login").value.trim();
-  const senha = document.getElementById("senha").value.trim();
+    if (formLogin) {
+        formLogin.addEventListener('submit', function (event) {
+            event.preventDefault();
 
-  // Valida se os campos estão vazios
-  if (login === "" || senha === "") {
-    alert("Preencha todos os campos!");
-    return; // Interrompe o código aqui
-  }
+            const login = document.getElementById('login').value;
+            const senha = document.getElementById('senha').value;
 
-  // Se estiver tudo certo, chama a função de Dheff
-  fazerLogin(login, senha);
+            if (!login || !senha) {
+                alert('Login e senha são obrigatórios.');
+                return;
+            }
+
+            fazerLogin(login, senha)
+                .then(data => {
+                    // Supondo que o backend retorna o usuário ou um token
+                    alert('Login bem-sucedido!');
+                    console.log('Resposta do login:', data);
+                    // Aqui você redirecionaria o usuário
+                    // window.location.href = 'dashboard.html'; 
+                })
+                .catch(error => {
+                    console.error('Erro no login:', error);
+                    alert('Login ou senha inválidos.');
+                });
+        });
+    }
 });

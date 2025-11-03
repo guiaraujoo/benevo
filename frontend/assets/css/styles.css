@@ -19,8 +19,7 @@ body {
   width: 100%;
   text-align: center;
   padding: 20px 0;
-  border-bottom-left-radius: 60px;
-  border-bottom-right-radius: 60px;
+  border-radius: 0px 0px 40px 40px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
@@ -44,11 +43,11 @@ main {
 }
 
 .titulo {
-  font-size: 1rem;
+  font-size: 1.3rem;
   color: #6b6b6b;
   font-weight: 800;
   width: 100%;
-  padding: 0.5px 0;
+
 }
 
 .titulo-container {
@@ -56,8 +55,9 @@ main {
   top: 30px;
   width: 100%;
   text-align: center;
-  border-bottom: 2.5px solid #717171;
-  padding-bottom: 30px;
+  border-bottom: 2px solid #717171;
+  padding-bottom: 35px;
+  padding-top: 15px;
 }
 
 /* ======== BOTÃO VOLTAR ======== */
@@ -65,7 +65,7 @@ main {
   position: absolute;
   left: 50px;
   top: 1px;
-  font-size: 30px;
+  font-size: 45px;
   color: #1f365c;
   text-decoration: none;
   font-weight: bold;

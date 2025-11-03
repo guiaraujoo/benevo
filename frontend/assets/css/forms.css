@@ -8,6 +8,7 @@
   align-items: center;
   transition: transform 0.3s ease;
   top: 50%;
+  margin-top: 110px;
 }
 
 .card-login:hover {
@@ -45,12 +46,12 @@
 }
 
 .btn-entrar {
-  margin-top: 25px;
+  margin-top: 30px;
   background-color: #1d3752;
   color: #d9b38c;
   border: none;
   border-radius: 25px;
-  padding: 10px 40px;
+  padding: 20px 50px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -90,20 +91,23 @@
   padding: 25px 30px;
   text-align: left;
   transition: all 0.3s ease;
+  margin-top: 150px;
+}
+
+.card-doacao:hover {
+  transform: translateY(-3px);
 }
 
 .card-doacao h2 {
   text-align: center;
   color: #bba284;
-  font-family: "Poppins", sans-serif;
-  font-weight: 600;
   margin-bottom: 15px;
   font-size: 18px;
 }
 
 #form-doacao label {
   display: block;
-  font-weight: 600;
+  font-weight: 500;
   color: #ffffff;
   margin-bottom: 5px;
   font-size: 13px;
@@ -118,7 +122,7 @@
   border: none;
   border-radius: 20px;
   font-size: 13px;
-  font-family: "Poppins", sans-serif;
+  font-weight: 500;
   outline: none;
 }
 
@@ -156,8 +160,9 @@
   color: #1f3a56;
   font-size: 20px;
   border-radius: 10px;
-  width: 40px;
-  height: 40px;
+  width: 90px;
+  height: 60px;
+
   display: flex;
   align-items: center;
   justify-content: center;

@@ -1,8 +1,9 @@
-/benevo-backend/target/
-/benevo-backend/.idea/
-/benevo-backend/*.iml
+backend/target/
+backend/.idea/
+backend/*.iml
 
 .vscode/
+.idea/
 *.log
 .env
 .venv
