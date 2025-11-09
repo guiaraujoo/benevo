@@ -1,5 +1,0 @@
-package main.java.com.benevo.serivce;
-
-public class ItemService {
-    
-}

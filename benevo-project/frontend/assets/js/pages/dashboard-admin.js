@@ -1,1 +1,0 @@
-const apiBuscarItens = getItensComFiltros;
