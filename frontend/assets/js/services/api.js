@@ -1,56 +1,129 @@
-const API_BASE_URL = 'http://localhost:8080'; // base url do backend
+// benevo-project/frontend/assets/js/services/api.js
 
+// URL base da API      
+const API_BASE_URL = "http://localhost:8080";
+
+// =====================================
+// LOGIN
+// =====================================
 export async function fazerLogin(login, senha) {
-    console.log('API: Tentando fazer login para:', login);
-
-    const LOGIN_URL = `${API_BASE_URL}/auth/login`; // url de login do backend
-
-    const dados = { // dados a serem enviados pro backend
-        login,
-        senha
-    };
-
-    
-    const resposta = await fetch(LOGIN_URL, { // a entrega com fetch, o async/await significa que vai esperar o ok da api
-        method: 'POST', // 'POST' significa que esta enviando dados
-        headers: {
-            'Content-Type': 'application/json' // notifica o envio de um pacode JSON
-        },
-        body: JSON.stringify(dados) // converter o pacote JS pra JSON
+  try {
+    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ login, senha }),
     });
 
-    if (!resposta.ok) { // verifica a resposta da api
-        
-        console.error('api: erro no login', resposta.status); // verifica se a resposta nao foi ok/valida e o erro ( 404, 401, 500)
-        
-        throw new Error('usuário e/ou senha invalidos.'); // avisa pro front que teve erro
+    if (!response.ok) {
+      throw new Error("Erro ao fazer login");
     }
 
-    console.log('api: login realizado'); // confirmacao de tudo certo caso a resposta seja ok
-    
-    return await resposta.json(); // o resposta.json() pega a resposta da api e joga pra enrico
+    const data = await response.json();
+    localStorage.setItem("token", data.token);
+    console.log("Login bem-sucedido:", data);
+    return data;
+  } catch (error) {
+    console.error("Erro no login:", error);
+    throw error;
+  }
 }
 
+// =====================================
+// CADASTRAR ITEM
+// =====================================
 export async function cadastrarItem(itemData) {
-    console.log('API: Tentando cadastrar item:', itemData.nome);
-
-    const CADASTRO_URL = `${API_BASE_URL}/item/cadastrar`; // url de cadastro de item
-
-    const dados = itemData; // ja ta no formato certo
-
-    const resposta = await fetch(CADASTRO_URL, {
-        method: 'POST', // enviando dados
-        headers: {
-            'Content-Type': 'application/json' // notifica o envio de um pacote JSON
-        },
-        body: JSON.stringify(dados) // converter o pacote JS pra JSON
+  try {
+    const response = await fetch(`${API_BASE_URL}/itens`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // Se o backend usar token:
+        // "Authorization": `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify(itemData),
     });
 
-    if (!resposta.ok) {
-        console.error('api: erro no cadastro', resposta.status);
-        throw new Error('falha ao cadastrar item.');
+    if (!response.ok) {
+      throw new Error("Erro ao cadastrar item");
     }
 
-    console.log('api: item cadastrado com sucesso');
-    return await resposta.json();
+    const data = await response.json();
+    console.log("Item cadastrado com sucesso:", data);
+    return data;
+  } catch (error) {
+    console.error("Erro ao cadastrar item:", error);
+    throw error;
+  }
+}
+
+// ================================
+// BUSCAR ITENS COM FILTROS (GET)
+// ================================
+export async function getItemsComFiltros({ categoria, condicao }) {
+
+    const queryParams = new URLSearchParams({
+        categoria,
+        condicao
+    }).toString();
+
+    const response = await fetch(`${API_BASE_URL}/itens?${queryParams}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("token_benevo")}` // <-- ATENÇÃO AQUI
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error("Erro ao buscar itens");
+    }
+
+    const data = await response.json();
+    console.log("Itens filtrados:", data);
+    return data;
+}
+
+// ================================
+// DELETAR ITEM (DELETE)
+// ================================
+export async function deletarItem(id) {
+
+    const response = await fetch(`${API_BASE_URL}/itens/excluir/${id}`, {
+        method: "DELETE",
+        headers: {
+            "Authorization": `Bearer ${localStorage.getItem("token_benevo")}`
+        }
+    });
+
+    if (!response.ok) {
+        const erro = await response.text();
+        alert("Erro ao excluir: " + erro);
+        throw new Error(erro);
+    }
+
+    alert("Item excluído com sucesso!");
+}
+
+// ================================
+// EDITAR ITEM (PUT)
+// ================================
+export async function editarItem(id, itemData) {
+
+    const response = await fetch(`${API_BASE_URL}/itens/editar/${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("token_benevo")}`
+        },
+        body: JSON.stringify(itemData)
+    });
+
+    if (!response.ok) {
+        const erro = await response.text();
+        alert("Erro ao editar: " + erro);
+        throw new Error(erro);
+    }
+
+    alert("Item atualizado com sucesso!");
+    return response.json();
 }
