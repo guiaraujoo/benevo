@@ -1,127 +1,276 @@
+/* ===== LOGIN ===== */
 .card-login {
   background-color: #1d3752;
   border-radius: 40px;
-  padding: 50px 60px;
+  padding: 30px 40px;
   box-shadow: 5px 7px 15px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
   align-items: center;
   transition: transform 0.3s ease;
-  top: 50%;
-  margin-top: 110px;
+  width: 90%;
+  max-width: 300px;
+  margin: 0 0 20px;
 }
 
-.card-login:hover {
+.card-login:hover,
+.card-cadastro:hover,
+.card-doacao:hover {
   transform: translateY(-3px);
 }
 
-#form-login {
+#form-login,
+#form-login-doador {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 12px;
   width: 100%;
 }
 
-#form-login label {
+#form-login label,
+#form-login-doador label {
   color: #fff;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 500;
   letter-spacing: 0.4px;
 }
 
-#form-login input {
-  width: 260px;
-  padding: 10px 14px;
+#form-login input,
+#form-login-doador input {
+  width: 220px;
+  padding: 8px 14px;
   border: 1.5px solid #ccc;
   border-radius: 25px;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   outline: none;
   transition: all 0.3s ease;
   background-color: #f5f5f5;
 }
 
-#form-login input:focus {
+#form-login input:focus,
+#form-login-doador input:focus,
+.form-group-cadastro input:focus {
   border-color: #d9b38c;
   box-shadow: 0 0 4px #d9b38c;
 }
 
-.btn-entrar {
-  margin-top: 30px;
+.btn-entrar,
+.btn-cadastrar,
+.btn-finalizar {
+  margin-top: 20px;
   background-color: #1d3752;
   color: #d9b38c;
   border: none;
   border-radius: 25px;
-  padding: 20px 50px;
-  font-size: 1rem;
+  padding: 12px 30px;
+  font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.25);
+  width: 100%;
 }
 
-.btn-entrar:hover {
+.btn-entrar:hover,
+.btn-cadastrar:hover,
+.btn-finalizar:hover {
   background-color: #fff;
   color: #1d3752;
   transform: translateY(-2px);
 }
 
-@media (max-width: 480px) {
-  .card-login {
-    padding: 25px 30px;
-    width: 80%;
+/* ===== CADASTRO DOADOR ===== */
+.card-cadastro {
+  background-color: #1d3752;
+  border-radius: 40px;
+  padding: 30px 40px;
+  box-shadow: 5px 7px 15px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.3s ease;
+  width: 90%;
+  max-width: 550px;
+  margin: 50px 0 20px;
+}
+
+#form-cad-doador {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 5%;
+  width: 100%;
+}
+
+.form-group-cadastro {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+}
+
+.form-row-cadastro {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 5%;
+}
+
+.form-row-cadastro .form-group-cadastro {
+  width: 47.5%;
+}
+
+.form-group-cadastro label {
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  margin-bottom: 2px;
+}
+
+.form-group-cadastro input[type="text"],
+.form-group-cadastro input[type="email"],
+.form-group-cadastro input[type="password"],
+.form-group-cadastro input[type="tel"] {
+  width: 100%;
+  padding: 6px 14px;
+  border: 1.5px solid #ccc;
+  border-radius: 25px;
+  font-size: 0.8rem;
+  outline: none;
+  transition: all 0.3s ease;
+  background-color: #f5f5f5;
+}
+
+.validation-icon {
+  position: absolute;
+  right: 15px;
+  top: 28px;
+  color: #28a745;
+  font-size: 0.9rem;
+}
+
+.password-rules {
+  padding: 2px 0;
+  margin-top: 2px;
+}
+
+.password-rules ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.password-rules li {
+  color: #ccc;
+  font-size: 0.65rem;
+  line-height: 1.1;
+  padding-left: 10px;
+  position: relative;
+}
+
+.password-rules li::before {
+  content: '•';
+  color: #ccc;
+  font-weight: bold;
+  display: inline-block;
+  width: 1em;
+  margin-left: -1em;
+}
+
+.upload-area {
+  background-color: #f5f5f5;
+  border-radius: 25px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.upload-icon {
+  font-size: 1.1rem;
+  color: #1d3752;
+  pointer-events: none;
+}
+
+.file-input-hidden {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.ja-tem-conta {
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.8rem;
+  margin-top: 5px;
+}
+
+.ja-tem-conta a:visited {
+  color: #d9b38c;
+}
+
+@media (max-width: 650px) {
+  .card-cadastro {
+    padding: 20px 25px;
+    margin-top: 30px;
   }
 
-  #form-login input {
+  .form-row-cadastro {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .form-row-cadastro .form-group-cadastro {
     width: 100%;
   }
 
-  .btn-entrar {
-    width: 100%;
-    padding: 10px 0;
+  .validation-icon {
+    top: 32px;
   }
 }
 
-
+/* ===== DOAÇÃO ===== */
 .card-doacao {
   background-color: #1f3a56;
   border-radius: 30px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   width: 500px;
-  margin: 50px auto 0;
-  padding: 25px 30px;
+  padding: 20px 25px;
   text-align: left;
   transition: all 0.3s ease;
-  margin-top: 150px;
-}
-
-.card-doacao:hover {
-  transform: translateY(-3px);
+  margin: auto;
 }
 
 .card-doacao h2 {
   text-align: center;
   color: #bba284;
-  margin-bottom: 15px;
-  font-size: 18px;
+  margin-bottom: 10px;
+  font-size: 17px;
 }
 
 #form-doacao label {
   display: block;
   font-weight: 500;
-  color: #ffffff;
-  margin-bottom: 5px;
-  font-size: 13px;
+  color: #fff;
+  margin-bottom: 4px;
+  font-size: 12px;
 }
 
 #form-doacao input,
 #form-doacao select,
 #form-doacao textarea {
   width: 100%;
-  padding: 8px 10px;
-  margin-bottom: 12px;
+  padding: 7px 10px;
+  margin-bottom: 10px;
   border: none;
   border-radius: 20px;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
   outline: none;
 }
@@ -137,14 +286,13 @@
 
 #form-doacao textarea {
   resize: none;
-  height: 70px;
+  height: 60px;
 }
 
 .texto-fotos {
   color: #fff;
-  font-size: 13px;
-  margin-top: 10px;
-  margin-bottom: 8px;
+  font-size: 12px;
+  margin: 8px 0 6px;
   text-align: center;
 }
 
@@ -152,39 +300,18 @@
   display: flex;
   justify-content: center;
   gap: 8px;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
 .upload-box {
   background-color: #d9d9d9;
   color: #1f3a56;
-  font-size: 20px;
+  font-size: 18px;
   border-radius: 10px;
-  width: 90px;
-  height: 60px;
-
+  width: 80px;
+  height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-}
-
-.btn-finalizar {
-  display: block;
-  width: 60%;
-  margin: 0 auto;
-  padding: 8px 0;
-  background-color: #1f3a56;
-  color: #bba284;
-  border: none;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
-  transition: 0.2s ease-in-out;
-}
-
-.btn-finalizar:hover {
-  background-color: #264666;
 }
