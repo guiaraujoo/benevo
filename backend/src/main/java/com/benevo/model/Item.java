@@ -13,6 +13,8 @@ public class Item {
     private String condicao;
     private String tamanho;
     private String descricao;
+    private String status;
+    private LocalDateTime dataEntrada;
 
     public Item() {
     }
@@ -32,36 +34,48 @@ public class Item {
     public void setId(String id) {
         this.id = id;
     }
+
     public String getNome() {
         return nome;
     }
     public void setNome(String nome) {
         this.nome = nome;
     }
+
     public String getCategoria() {
         return categoria;
     }
     public void setCategoria(String categoria) {
         this.categoria = categoria;
     }
+
     public String getCondicao() {
         return condicao;
     }
     public void setCondicao(String condicao) {
         this.condicao = condicao;
     }
+
     public String getTamanho() {
         return tamanho;
     }
     public void setTamanho(String tamanho) {
         this.tamanho = tamanho;
     }
+
     public String getDescricao() {
         return descricao;
     }
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+
+    public LocalDateTime getDataEntrada() { return dataEntrada; }
+    public void setDataEntrada(LocalDateTime dataEntrada) { this.dataEntrada = dataEntrada; }
+
 
     @Override
     public String toString() {
@@ -72,6 +86,9 @@ public class Item {
                 ", condicao='" + condicao + '\'' +
                 ", tamanho='" + tamanho + '\'' +
                 ", descricao='" + descricao + '\'' +
+                ", status='" + status + '\'' +
+                ", dataEntrada=" + dataEntrada +
                 '}';
     }
+
 }
