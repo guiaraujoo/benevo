@@ -1,14 +1,15 @@
-package com.benevo;
+package com.benevo; // Certifique-se que o pacote está correto
 
 import com.benevo.model.Item;
 import com.benevo.repository.ItemRepository;
-import com.benevo.service.ItemService;
+import com.benevo.serivce.ItemService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.List;
+import java.util.List; // Importar a classe List
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,17 +23,21 @@ public class ItemServiceTest {
     @Autowired
     private ItemRepository itemRepository;
 
+    // --- MODIFICADO ---
+    // Removemos o @AfterEach. O banco será limpo APENAS ANTES de cada teste.
+    // O item do último teste executado permanecerá no banco.
     @BeforeEach
     void cleanupDatabase() {
-        System.out.println("\n🧹 --- LIMPANDO O BANCO DE DADOS (ANTES DO TESTE) ---");
+        System.out.println("--- LIMPANDO O BANCO DE DADOS (ANTES DO TESTE) ---");
         itemRepository.deleteAll();
     }
 
+    // --- NOVO TESTE PARA REGISTRAR, CONSULTAR E MOSTRAR NO OUTPUT ---
     @Test
     void testRegistrarEVerificarConsultaNoOutput() {
-        System.out.println("\n🚀 --- INICIANDO: testRegistrarEVerificarConsultaNoOutput ---");
+        System.out.println("--- INICIANDO: testRegistrarEVerificarConsultaNoOutput ---");
 
-        // 1️⃣ Criar item
+        // 1. Arrange (Registrar o item)
         Item itemParaSalvar = new Item(
                 null,
                 "Camiseta Regata (Teste Consulta)",
@@ -41,80 +46,68 @@ public class ItemServiceTest {
                 "G",
                 "Camiseta para mostrar no output."
         );
-        System.out.println("🧩 Criando item: " + itemParaSalvar);
 
-        // 2️⃣ Salvar item
         Item itemSalvo = itemService.registrarItem(itemParaSalvar);
-        System.out.println("✅ Item salvo com ID: " + itemSalvo.getId());
+        System.out.println("Item salvo com ID: " + itemSalvo.getId());
 
-        // 3️⃣ Consultar todos os itens
+        // 2. Act (Consultar o banco de dados)
+        // Vamos consultar todos os itens (deve ser apenas 1)
         List<Item> itensNoBanco = itemRepository.findAll();
-        System.out.println("📦 Quantidade de itens encontrados: " + itensNoBanco.size());
 
-        // 4️⃣ Validação
-        assertFalse(itensNoBanco.isEmpty(), "O banco não deveria estar vazio após salvar.");
+        // 3. Assert & Print (Mostrar no output)
+        assertFalse(itensNoBanco.isEmpty(), "O banco de dados não deveria estar vazio após salvar.");
 
-        // 5️⃣ Exibir itens
-        System.out.println("\n🧾 --- RESULTADO DA CONSULTA (findAll) ---");
+        System.out.println("\n--- RESULTADO DA CONSULTA (findAll) ---");
         for (Item item : itensNoBanco) {
-            System.out.println("➡️ " + item);
+            // Graças ao método toString() que adicionamos, isso será impresso de forma legível
+            System.out.println(item.toString());
         }
-        System.out.println("🏁 --- FIM DO TESTE: testRegistrarEVerificarConsultaNoOutput ---");
+        System.out.println("--- FIM DO TESTE: testRegistrarEVerificarConsultaNoOutput ---");
     }
+    // --- FIM DO NOVO TESTE ---
+
 
     @Test
     void testRegistrarItem_ComDadosValidos_DeveSalvarItemNoMongoDB() {
-        System.out.println("\n🔧 --- testRegistrarItem_ComDadosValidos_DeveSalvarItemNoMongoDB ---");
-
-        Item itemParaSalvar = new Item(null, "Camiseta Branca", "Vestimenta", "3", "M", "Camiseta de algodão.");
+        // ... (este teste continua igual)
+        Item itemParaSalvar = new Item(
+                null, "Camiseta Branca", "Vestimenta", "3", "M", "Camiseta de algodão."
+        );
         Item itemSalvo = itemService.registrarItem(itemParaSalvar);
-
         assertNotNull(itemSalvo);
         assertNotNull(itemSalvo.getId());
-
-        System.out.println("✅ Item salvo com sucesso: " + itemSalvo);
-
         Optional<Item> itemDoBanco = itemRepository.findById(itemSalvo.getId());
         assertTrue(itemDoBanco.isPresent());
-        System.out.println("🔎 Item encontrado no banco: " + itemDoBanco.get());
     }
 
     @Test
     void testRegistrarItem_ComNomeNulo_DeveLancarExcecaoENaoSalvar() {
-        System.out.println("\n⚠️ --- testRegistrarItem_ComNomeNulo_DeveLancarExcecaoENaoSalvar ---");
-
-        Item itemInvalido = new Item(null, null, "Roupa", "Novo", "M", "Descrição.");
-
+        // ... (este teste continua igual)
+        Item itemInvalido = new Item(
+                null, null, "Roupa", "Novo", "M", "Descrição."
+        );
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             itemService.registrarItem(itemInvalido);
         });
-
-        System.out.println("❌ Exceção lançada corretamente: " + exception.getMessage());
         assertEquals("O nome do item é obrigatório.", exception.getMessage());
         assertEquals(0, itemRepository.count());
     }
 
     @Test
     void testBuscarPorId_QuandoItemExiste_DeveRetornarItem() {
-        System.out.println("\n🔍 --- testBuscarPorId_QuandoItemExiste_DeveRetornarItem ---");
-
+        // ... (este teste continua igual)
         Item itemSetup = new Item(null, "Item de Teste", "Categoria", "Novo", "P", "Desc");
-        Item itemSalvo = itemRepository.save(itemSetup);
-        System.out.println("💾 Item salvo manualmente: " + itemSalvo);
-
-        Optional<Item> itemEncontrado = itemService.buscarPorId(itemSalvo.getId());
-        assertTrue(itemEncontrado.isPresent());
-        System.out.println("✅ Item encontrado via serviço: " + itemEncontrado.get());
+        Item itemSalvoNoSetup = itemRepository.save(itemSetup);
+        String idSalvo = itemSalvoNoSetup.getId();
+        Optional<Item> itemEncontradoOpt = itemService.buscarPorId(idSalvo);
+        assertTrue(itemEncontradoOpt.isPresent());
     }
 
     @Test
     void testBuscarPorId_QuandoItemNaoExiste_DeveRetornarVazio() {
-        System.out.println("\n🚫 --- testBuscarPorId_QuandoItemNaoExiste_DeveRetornarVazio ---");
-
+        // ... (este teste continua igual)
         String idFalso = "60c72b9fffb4e0001f000001";
-        Optional<Item> itemEncontrado = itemService.buscarPorId(idFalso);
-
-        assertTrue(itemEncontrado.isEmpty());
-        System.out.println("✅ Nenhum item encontrado (como esperado).");
+        Optional<Item> itemEncontradoOpt = itemService.buscarPorId(idFalso);
+        assertTrue(itemEncontradoOpt.isEmpty());
     }
 }

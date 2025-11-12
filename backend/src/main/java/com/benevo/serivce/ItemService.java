@@ -27,12 +27,6 @@ public class ItemService {
         return itemRepository.save(item);
     }
 
-    // LISTAR TODOS OS ITENS (sem filtros)
-    public List<Item> listarTodos() {
-        return itemRepository.findAll(Sort.by(Sort.Direction.DESC, "dataEntrada"));
-    }
-
-
     // LISTAR ITENS FILTRADOS (Fluxo 2)
     public List<Item> listarItensFiltrados(String termoBusca, String sortData) {
         Sort sort;

@@ -2,7 +2,7 @@ package com.benevo.controller;
 
 import com.benevo.dto.ItemCadastroDTO;
 import com.benevo.model.Item;
-import com.benevo.service.ItemService;
+import com.benevo.serivce.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
