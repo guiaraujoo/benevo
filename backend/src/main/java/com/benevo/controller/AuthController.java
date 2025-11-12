@@ -1,7 +1,7 @@
 package com.benevo.controller;
 
 import com.benevo.dto.LoginRequestDTO;
-import com.benevo.serivce.UsuarioService;
+import com.benevo.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
