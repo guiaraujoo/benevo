@@ -1,4 +1,4 @@
-package com.benevo.serivce;
+package com.benevo.service;
 
 import com.benevo.model.Usuario; // o molde de usuario q peu fez
 import com.benevo.repository.UsuarioRepository; // o acesso pro banco q peu criou
