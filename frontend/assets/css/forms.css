@@ -1,16 +1,47 @@
 /* ===== LOGIN ===== */
-.card-login {
+.card-login,
+.card-cadastro,
+.card-doacao,
+.card-login-beneficiario {
   background-color: #1d3752;
   border-radius: 40px;
-  padding: 30px 40px;
   box-shadow: 5px 7px 15px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
   align-items: center;
   transition: transform 0.3s ease;
+}
+
+.card-login {
+  padding: 30px 40px;
   width: 90%;
   max-width: 300px;
   margin: 0 0 20px;
+}
+
+.card-cadastro {
+  padding: 30px 40px;
+  width: 90%;
+  max-width: 550px;
+  margin: 50px 0 20px;
+}
+
+.card-login-beneficiario {
+  padding: 30px 40px;
+  width: 90%;
+  max-width: 370px;
+  margin: 20px auto;
+}
+
+.card-doacao {
+  background-color: #1f3a56;
+  border-radius: 30px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  width: 500px;
+  padding: 20px 25px;
+  text-align: left;
+  transition: all 0.3s ease;
+  margin: auto;
 }
 
 .card-login:hover,
@@ -20,7 +51,9 @@
 }
 
 #form-login,
-#form-login-doador {
+#form-login-doador,
+#form-login-benef,
+.form-ajuda {
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -28,7 +61,9 @@
 }
 
 #form-login label,
-#form-login-doador label {
+#form-login-doador label,
+#form-login-benef label,
+.form-ajuda label {
   color: #fff;
   font-size: 0.8rem;
   font-weight: 500;
@@ -36,8 +71,12 @@
 }
 
 #form-login input,
-#form-login-doador input {
-  width: 220px;
+#form-login-doador input,
+#form-login-benef input,
+.form-ajuda input,
+#palavra-chave-select,
+#resposta-secreta {
+  width: 100%;
   padding: 8px 14px;
   border: 1.5px solid #ccc;
   border-radius: 25px;
@@ -45,11 +84,22 @@
   outline: none;
   transition: all 0.3s ease;
   background-color: #f5f5f5;
+  color: #333;
+}
+
+#form-login input,
+#form-login-doador input,
+#form-login-benef input {
+  width: 220px;
 }
 
 #form-login input:focus,
 #form-login-doador input:focus,
-.form-group-cadastro input:focus {
+#form-login-benef input:focus,
+.form-group-cadastro input:focus,
+.form-ajuda input:focus,
+#palavra-chave-select:focus,
+#resposta-secreta:focus {
   border-color: #d9b38c;
   box-shadow: 0 0 4px #d9b38c;
 }
@@ -80,20 +130,6 @@
 }
 
 /* ===== CADASTRO DOADOR ===== */
-.card-cadastro {
-  background-color: #1d3752;
-  border-radius: 40px;
-  padding: 30px 40px;
-  box-shadow: 5px 7px 15px rgba(0, 0, 0, 0.3);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transition: transform 0.3s ease;
-  width: 90%;
-  max-width: 550px;
-  margin: 50px 0 20px;
-}
-
 #form-cad-doador {
   display: flex;
   flex-wrap: wrap;
@@ -211,42 +247,18 @@
   margin-top: 5px;
 }
 
+.ja-tem-conta a,
 .ja-tem-conta a:visited {
   color: #d9b38c;
+  text-decoration: none;
+  transition: color 0.3s ease;
 }
 
-@media (max-width: 650px) {
-  .card-cadastro {
-    padding: 20px 25px;
-    margin-top: 30px;
-  }
-
-  .form-row-cadastro {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .form-row-cadastro .form-group-cadastro {
-    width: 100%;
-  }
-
-  .validation-icon {
-    top: 32px;
-  }
+.ja-tem-conta a:hover {
+  color: #fff;
 }
 
 /* ===== DOAÇÃO ===== */
-.card-doacao {
-  background-color: #1f3a56;
-  border-radius: 30px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-  width: 500px;
-  padding: 20px 25px;
-  text-align: left;
-  transition: all 0.3s ease;
-  margin: auto;
-}
-
 .card-doacao h2 {
   text-align: center;
   color: #bba284;
@@ -314,4 +326,73 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+}
+
+.link-ajuda {
+  text-align: center;
+  width: 100%;
+  margin-top: 10px;
+  font-size: 0.8rem;
+}
+
+.link-ajuda a {
+  color: #d9b38c;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.link-ajuda a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.texto-ajuda {
+  color: #e0e0e0;
+  font-size: 0.9rem;
+  text-align: center;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.area-resultados {
+  width: 100%;
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.placeholder-resultado {
+  color: #d9b38c;
+  font-size: 0.85rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+#palavra-chave-select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%231D3752" d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+@media (max-width: 650px) {
+  .card-cadastro {
+    padding: 20px 25px;
+    margin-top: 30px;
+  }
+
+  .form-row-cadastro {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .form-row-cadastro .form-group-cadastro {
+    width: 100%;
+  }
+
+  .validation-icon {
+    top: 32px;
+  }
 }
