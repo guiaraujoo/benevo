@@ -22,8 +22,23 @@ document.addEventListener("DOMContentLoaded", function () {
                     // Supondo que o backend retorna o usuário ou um token
                     alert('Login bem-sucedido!');
                     console.log('Resposta do login:', data);
-                    // Aqui você redirecionaria o usuário
-                    // window.location.href = 'dashboard.html'; 
+
+                    // --- NOVO: Armazena o token e tipo de usuário ---
+                    if (data.token) {
+                        // Verifica o tipo de usuário retornado pelo backend
+                        if (data.tipo === 'doador') {
+                            localStorage.setItem('token_doador', data.token);
+                        } else if (data.tipo === 'funcionario') {
+                            localStorage.setItem('token_funcionario', data.token);
+                        } else {
+                            console.warn('Tipo de usuário não reconhecido:', data.tipo);
+                        }
+                    } else {
+                        console.warn('Nenhum token retornado pelo backend.');
+                    }
+
+                    // --- NOVO: Redireciona para o dashboard ---
+                    window.location.href = 'dashboard-admin.html'; 
                 })
                 .catch(error => {
                     console.error('Erro no login:', error);

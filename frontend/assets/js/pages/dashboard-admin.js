@@ -1,9 +1,23 @@
+// --- IMPORTAÇÕES ---
+// (supondo que as funções da API do Dhefferson estão neste arquivo)
+import { apiBuscarItens, apiEditarItem, apiExcluirItem } from "../services/api.js";
+
 // --- Elementos do HTML ---
 const tabelaBody = document.getElementById("corpo-tabela-itens");
 const formFiltros = document.getElementById("form-filtros");
 const modal = document.getElementById("modal-editar");
 const btnFecharModal = document.getElementById("btn-fechar-modal");
 const formEditar = document.getElementById("form-editar-item");
+
+// --- Recupera o token do usuário logado ---
+const token = localStorage.getItem("token_doador") || localStorage.getItem("token_funcionario");
+
+if (!token) {
+  alert("Erro: Nenhum usuário logado. Faça login novamente para acessar o painel.");
+  console.error("ERRO: Nenhum token encontrado no localStorage.");
+  // opcional: redirecionar
+  // window.location.href = "../pages/login.html";
+}
 
 // --- 1. Renderizar a Tabela ---
 function renderizarTabela(itens) {
@@ -42,7 +56,7 @@ function renderizarTabela(itens) {
     btnExcluir.className = "btn-excluir";
     btnExcluir.addEventListener("click", async () => {
       if (confirm(`Tem certeza que deseja excluir o item "${item.nome}"?`)) {
-        await apiExcluirItem(item.id); // Função do Dhefferson
+        await apiExcluirItem(item.id, token); // NOVO: Enviando token
         carregarItens(); // Recarrega a tabela
       }
     });
@@ -65,7 +79,8 @@ function abrirModalParaEditar(item) {
 
 // --- 3. Eventos ---
 async function carregarItens(filtros = {}) {
-  const itens = await apiBuscarItens(filtros); // Dhefferson cria
+  console.log("Carregando itens com filtros:", filtros); // DEBUG
+  const itens = await apiBuscarItens(filtros, token); // NOVO: Enviando token
   renderizarTabela(itens);
 }
 
@@ -88,7 +103,7 @@ formEditar.addEventListener("submit", async (e) => {
     categoria: document.getElementById("edit-categoria").value,
     // mais campos...
   };
-  await apiEditarItem(id, itemAtualizado);
+  await apiEditarItem(id, itemAtualizado, token); // NOVO: Enviando token
   modal.classList.remove("visivel");
   carregarItens();
 });
