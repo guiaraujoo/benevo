@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Benevo - Resgate</title>
+
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <link rel="stylesheet" href="assets/css/dashboard.css" />
+    <link rel="stylesheet" href="assets/css/modal.css" />
+    
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    
+<link href="https://fonts.googleapis.com/css2?family=Shrikhand&display=swap" rel="stylesheet">
+    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body>
+    <header class="header">
+        <h1 class="logo">benevo</h1>
+    </header>
+<br>
+<br>
+    <main class="main-gestao-final">
+        <div class="gestao-faixa-superior">
+            <a href="index.html" class="btn-voltar-faixa"><</a>
+            <h2 class="titulo-faixa">Itens</h2>
+        </div>
+        <br>
+        <div class="search-bar-gestao-final">
+            <i class="fas fa-search search-icon-gestao-final"></i>
+            <input type="text" placeholder="Pesquisar itens..." class="search-input-gestao-final">
+        </div>
+
+        <div class="content-wrapper-gestao-final">
+            <aside class="filter-sidebar">
+                <div class="filter-header">
+                    <i class="fas fa-filter filter-icon"></i>
+                </div>
+                
+<div class="filter-option filter-highlight">
+                    <label for="mais-recente">Mais Recente</label>
+                    <input type="checkbox" id="mais-recente" checked>
+                </div>
+                <div class="filter-option filter-grayed">
+                    <label for="mais-antigo">Mais Antigo</label>
+                    <input type="checkbox" id="mais-antigo">
+                </div>
+                <div class="filter-option filter-highlight">
+                    <label for="melhor-estado">Melhor estado</label>
+                    <input type="checkbox" id="melhor-estado" checked>
+                </div>
+                <div class="filter-option filter-grayed last-filter">
+                    <label for="pior-estado">Pior estado</label>
+                    <input type="checkbox" id="pior-estado">
+                </div>
+            </aside>
+
+            <section class="item-grid">
+                
+<div class="item-card" data-item-id="1">
+                    <img src="img/ursinho-dashboard.jpg" alt="Ursinho de Pelúcia Bege" class="item-image">
+                    <div class="item-info">
+                        <p><strong>Nome:</strong> Ursinho de Pelúcia Bege</p>
+                        <p><strong>Tamanho:</strong> M</p>
+                        <p><strong>Categoria:</strong> Brinquedo</p>
+                        <p><strong>Doador:</strong> Eliza Cordeiro</p>
+                        <p><strong>Estado:</strong> 4/5</p>
+                        <p><strong>Data:</strong> 29/10/2025</p>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-resgatar" onclick="openModal('view', 1)">Resgatar Item</button>
+                        <div class="btn-icon-group"> 
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="item-card" data-item-id="2">
+                    <img src="img/camisa-dashboard.jpg" alt="Camisa Sport" class="item-image">
+                    <div class="item-info">
+                        <p><strong>Nome:</strong> Camisa Sport</p>
+                        <p><strong>Tamanho:</strong> G</p>
+                        <p><strong>Categoria:</strong> Vestimenta</p>
+                        <p><strong>Doador:</strong> Kaiki Souza</p>
+                        <p><strong>Estado:</strong> 2/5</p>
+                        <p><strong>Data:</strong> 10/10/2025</p>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-resgatar" onclick="openModal('view', 2)">Resgatar Item</button>
+                        <div class="btn-icon-group">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="item-card" data-item-id="3">
+                    <img src="img/panela-dashboard.jpg" alt="Panela de Pressão" class="item-image">
+                    <div class="item-info">
+                        <p><strong>Nome:</strong> Panela de Pressão</p>
+                        <p><strong>Tamanho:</strong> P</p>
+                        <p><strong>Categoria:</strong> Utensílio</p>
+                        <p><strong>Doador:</strong> Altemar Galvão</p>
+                        <p><strong>Estado:</strong> 3/5</p>
+                        <p><strong>Data:</strong> 31/11/2025</p>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-resgatar" onclick="openModal('view', 3)">Resgatar Item</button>
+                        <div class="btn-icon-group">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="item-card" data-item-id="4">
+                    <img src="img/cadeira-dashboard.jpg" alt="Cadeira de Balanço" class="item-image">
+                    <div class="item-info">
+                        <p><strong>Nome:</strong> Cadeira de Balanço</p>
+                        <p><strong>Tamanho:</strong> G</p>
+                        <p><strong>Categoria:</strong> Móvel</p>
+                        <p><strong>Doador:</strong> Lorena Laiz</p>
+                        <p><strong>Estado:</strong> 4/5</p>
+                        <p><strong>Data:</strong> 25/09/2025</p>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-resgatar" onclick="openModal('view', 4)">Resgatar Item</button>
+                        <div class="btn-icon-group">
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <div id="modal-editar" class="modal">
+    <div class="modal-content">
+        <span class="close-button" onclick="closeModal()">&times;</span>
+        <h2 id="modalTitle">Detalhes e Status do Item</h2>
+        <form id="itemFormResgate"> 
+            <div class="form-group"><label for="nome">Nome:</label><input type="text" id="nome" name="nome" disabled></div>
+            <div class="form-group"><label for="tamanho">Tamanho:</label><input type="text" id="tamanho" name="tamanho" disabled></div>
+            <div class="form-group"><label for="categoria">Categoria:</label><input type="text" id="categoria" name="categoria" disabled></div>
+            <div class="form-group"><label for="doador">Doador:</label><input type="text" id="doador" name="doador" disabled></div>
+            
+            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ddd;">
+            
+            <div class="form-group"><label for="status_resgate">Status Atual:</label><input type="text" id="status_resgate" name="status_resgate" disabled></div>
+            <div class="form-group"><label for="data_retirada">Retirada Prevista:</label><input type="text" id="data_retirada" name="data_retirada" disabled></div>
+            <div class="form-group"><label for="local_retirada">Local de Retirada:</label><textarea id="local_retirada" name="local_retirada" disabled></textarea></div>
+            
+            <div class="modal-actions">
+                <button type="button" id="btnConfirmarResgate" class="btn-modal-salvar">Confirmar Resgate</button>
+                <button type="button" class="btn-modal-cancelar" onclick="closeModal()">Fechar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Mapeamento de dados simulados para a página de Resgate, incluindo status e retirada
+    const RESGATE_MOCK_DATA = {
+        1: { 
+            nome: "Ursinho de Pelúcia Bege", 
+            tamanho: "M", 
+            categoria: "Brinquedo", 
+            doador: "Eliza Cordeiro", 
+            status: "Reservado - Aguardando Retirada", 
+            retirada: "05/01/2026", 
+            local: "Rua da Solidariedade, 123 - Centro A" 
+        },
+        2: { 
+            nome: "Camisa Sport", 
+            tamanho: "G", 
+            categoria: "Vestimenta", 
+            doador: "Kaiki Souza", 
+            status: "Disponível para Resgate", 
+            retirada: "Imediatamente", 
+            local: "Armazém Leste - Necessita Agendamento" 
+        },
+        3: { 
+            nome: "Panela de Pressão", 
+            tamanho: "P", 
+            categoria: "Utensílio", 
+            doador: "Altemar Galvão", 
+            status: "Reservado - Aguardando Retirada", 
+            retirada: "15/12/2025", 
+            local: "Av. Principal, 404 - Ponto de Coleta B" 
+        },
+        4: { 
+            nome: "Cadeira de Balanço", 
+            tamanho: "G", 
+            categoria: "Móvel", 
+            doador: "Lorena Laiz", 
+            status: "Disponível para Resgate", 
+            retirada: "Imediatamente", 
+            local: "Centro de Distribuição A" 
+        }
+    };
+
+    function openModal(mode, itemId) {
+        const modal = document.getElementById('modal-editar');
+        const modalTitle = document.getElementById('modalTitle');
+        const btnConfirmarResgate = document.getElementById('btnConfirmarResgate');
+
+        const data = RESGATE_MOCK_DATA[itemId];
+
+        // Define o título e mostra o modal
+        modalTitle.textContent = `Detalhes do Item #${itemId}`;
+        modal.classList.add('visivel');
+
+        // Popula os campos básicos
+        document.getElementById('nome').value = data.nome;
+        document.getElementById('tamanho').value = data.tamanho;
+        document.getElementById('categoria').value = data.categoria;
+        document.getElementById('doador').value = data.doador;
+        
+        // Popula os campos de Resgate/Retirada (AS NOVAS INFORMAÇÕES)
+        document.getElementById('status_resgate').value = data.status;
+        document.getElementById('data_retirada').value = data.retirada;
+        document.getElementById('local_retirada').value = data.local;
+
+        // Lógica do Botão: Muda de "CONFIRMAR RESGATE" para "ITEM RESERVADO"
+        if (data.status === 'Disponível para Resgate') {
+            btnConfirmarResgate.textContent = 'CONFIRMAR RESGATE';
+            btnConfirmarResgate.disabled = false;
+            btnConfirmarResgate.style.backgroundColor = '#28a745'; // Verde
+            
+            btnConfirmarResgate.onclick = () => {
+                alert(`Item ${itemId} - ${data.nome} RESGATADO com sucesso! Você receberá as instruções de retirada.`);
+                closeModal();
+            };
+        } else {
+            btnConfirmarResgate.textContent = 'ITEM RESERVADO';
+            btnConfirmarResgate.disabled = true;
+            btnConfirmarResgate.style.backgroundColor = '#6c757d'; // Cinza
+            btnConfirmarResgate.onclick = null;
+        }
+    }
+
+    function closeModal() {
+        document.getElementById('modal-editar').classList.remove('visivel');
+    }
+
+    // Fecha o modal ao clicar fora
+    window.onclick = function(event) {
+        if (event.target == document.getElementById('modal-editar')) {
+            closeModal();
+        }
+    }
+</script>
+</body>
+</html>

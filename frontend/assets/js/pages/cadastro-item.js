@@ -46,9 +46,18 @@ document.addEventListener("DOMContentLoaded", function () {
             tamanho: tamanho
         };
 
+        // NOVO: Recupera o token salvo pelo login do doador
+        const token = localStorage.getItem("token_doador");
+
+        if (!token) {
+            alert('Erro: Nenhum doador logado. Faça login novamente antes de cadastrar um item.');
+            console.error('ERRO: Token do doador não encontrado no localStorage.');
+            return;
+        }
+
         // 5. Chama a API
         console.log('Enviando para a API:', itemData); // DEBUG
-        cadastrarItem(itemData)
+        cadastrarItem(itemData, token) // ← agora enviando também o token
             .then(data => {
                 console.log('Resposta da API:', data); // DEBUG
                 alert('Item "' + data.nome + '" adicionado no banco de dados.');

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Benevo - Recuperar ID</title>
+
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <link rel="stylesheet" href="assets/css/forms.css" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Shrikhand&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header class="header">
+        <h1 class="logo">Benevo</h1>
+    </header>
+
+    <main>
+        <div class="titulo-container">
+            <a href="login-beneficiario.html" class="btn-voltar"><</a> 
+            <h2 class="titulo">Recuperar ID Benevo</h2>
+        </div>
+
+        <div class="card-login-beneficiario"> 
+            <p class="texto-ajuda">
+                Selecione e responda a sua palavra chave de segurança para obter seu ID.
+            </p>
+            
+            <form id="form-recuperar-id" class="form-ajuda">
+                <label for="palavra-chave-select">Palavra Chave de Segurança</label>
+                <select id="palavra-chave-select" required>
+                    <option value="" disabled selected>Escolha sua pergunta...</option>
+                    <option value="mae">Nome de solteira da sua mãe</option>
+                    <option value="pet">Nome do seu primeiro animal de estimação</option>
+                    <option value="primo">Nome de um primo </option>
+                </select>
+
+                <label for="resposta-secreta">Sua Resposta</label>
+                <input type="text" id="resposta-secreta" placeholder="Digite a resposta" required />
+                
+                <button type="submit" class="btn-entrar btn-entrar-beneficiario">Verificar e Obter ID</button>
+            </form>
+
+            <div id="resultados-ajuda" class="area-resultados">
+                <p class="placeholder-resultado">Aguardando verificação da resposta...</p>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

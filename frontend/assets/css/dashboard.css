@@ -16,19 +16,25 @@
 }
 
 .btn-voltar-faixa {
-    position: absolute;
-    left: -150px; 
-    top: -25px; /* Puxa levemente para cima para alinhar melhor o texto */
-    font-size: 1.5rem; 
-    color: #333; 
-    text-decoration: none;
-    padding: 0 20px; 
+  position: absolute;
+  left: -190px;
+  top: -25px;
+  font-size: 45px;
+  color: #1f365c;
+  text-decoration: none;
+  font-weight: bold;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.btn-voltar-faixa:hover {
+  transform: scale(1.2);
+  color: #d9b38c;
 }
 
 .titulo-faixa {
     font-family: "Poppins", sans-serif;
     font-size: 1.4rem; 
-    color: #333; 
+    color: #6b6b6b; 
     font-weight: 500;
     margin: 0;
     position: relative;
@@ -255,6 +261,21 @@
     background-color: #dc3545; 
 }
 
+.btn-resgatar {
+    background-color: #1f365c;
+    color: #ffffff;
+    border: none;
+    padding: 10px 16px; /* Botão maior */
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.btn-resgatar:hover {
+    background-color: #2b4a78;
+}
 /* RESPONSIVIDADE: Ajuste para telas menores */
 @media (max-width: 900px) {
     .content-wrapper-gestao-final {

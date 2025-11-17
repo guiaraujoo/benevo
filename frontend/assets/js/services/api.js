@@ -3,6 +3,22 @@
 // URL base da API      
 const API_BASE_URL = "http://localhost:8080";
 
+// ============================================
+// FUNÇÕES DE AUTENTICAÇÃO (token e headers)
+// ============================================
+
+function getAuthToken() {
+  return localStorage.getItem("token_benevo");
+}
+
+function getAuthHeaders() {
+  const token = getAuthToken();
+  return {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer " + token
+  };
+}
+
 // =====================================
 // LOGIN
 // =====================================
@@ -86,44 +102,138 @@ export async function getItemsComFiltros({ categoria, condicao }) {
 // ================================
 // DELETAR ITEM (DELETE)
 // ================================
-export async function deletarItem(id) {
 
-    const response = await fetch(`${API_BASE_URL}/itens/excluir/${id}`, {
-        method: "DELETE",
-        headers: {
-            "Authorization": `Bearer ${localStorage.getItem("token_benevo")}`
-        }
+export async function apiDeletarItem(id) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/item/deletar/${id}`, {
+      method: "DELETE",
+      headers: getAuthHeaders(),
     });
 
-    if (!response.ok) {
-        const erro = await response.text();
-        alert("Erro ao excluir: " + erro);
-        throw new Error(erro);
-    }
+    if (!response.ok) throw new Error("Erro ao deletar item");
 
-    alert("Item excluído com sucesso!");
+    console.log("Item deletado com sucesso!");
+  } catch (error) {
+    console.error("Erro ao deletar item:", error);
+    throw error;
+  }
 }
 
 // ================================
 // EDITAR ITEM (PUT)
 // ================================
-export async function editarItem(id, itemData) {
 
-    const response = await fetch(`${API_BASE_URL}/itens/editar/${id}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem("token_benevo")}`
-        },
-        body: JSON.stringify(itemData)
+export async function apiEditarItem(id, itemData) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/item/atualizar/${id}`, {
+      method: "PUT",
+      headers: getAuthHeaders(),
+      body: JSON.stringify(itemData),
     });
 
-    if (!response.ok) {
-        const erro = await response.text();
-        alert("Erro ao editar: " + erro);
-        throw new Error(erro);
-    }
+    if (!response.ok) throw new Error("Erro ao editar item");
 
-    alert("Item atualizado com sucesso!");
-    return response.json();
+    const data = await response.json();
+    console.log("Item atualizado:", data);
+    return data;
+  } catch (error) {
+    console.error("Erro ao editar item:", error);
+    throw error;
+  }
 }
+
+// ================================
+// SPRINT 3 - DOADOR (FLUXO 1)
+// ================================
+
+export async function apiRegistrarDoador(doadorData) {
+  const response = await fetch(`${API_BASE_URL}/doadores/registrar`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(doadorData),
+  });
+  if (!response.ok) throw new Error("Erro ao registrar doador");
+  return await response.json();
+}
+
+export async function apiLoginDoador(email, senha) {
+  const response = await fetch(`${API_BASE_URL}/doadores/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, senha }),
+  });
+  if (!response.ok) throw new Error("Erro no login do doador");
+  return await response.json();
+}
+
+// ================================
+// SPRINT 3 - BENEFICIÁRIO (FLUXO 3)
+// ================================
+
+export async function apiRegistrarBeneficiario(benefData) {
+  const response = await fetch(`${API_BASE_URL}/beneficiarios/registrar`, {
+    method: "POST",
+    headers: getAuthHeaders(),
+    body: JSON.stringify(benefData),
+  });
+  if (!response.ok) throw new Error("Erro ao registrar beneficiário");
+  return await response.json();
+}
+
+export async function apiLoginBeneficiario(idBenevo) {
+  const response = await fetch(`${API_BASE_URL}/beneficiarios/login`, {
+    method: "POST",
+    headers: getAuthHeaders(),
+    body: JSON.stringify({ idBenevo }),
+  });
+  if (!response.ok) throw new Error("Erro no login do beneficiário");
+  return await response.json();
+}
+
+export async function apiAjudarLogin(termoBusca) {
+  const response = await fetch(
+    `${API_BASE_URL}/beneficiarios/ajuda-login?busca=${termoBusca}`,
+    {
+      method: "GET",
+      headers: getAuthHeaders(),
+    }
+  );
+  if (!response.ok) throw new Error("Erro ao buscar ajuda de login");
+  return await response.json();
+}
+
+// ================================
+// SPRINT 3 - RESGATE E APROVAÇÃO
+// ================================
+
+export async function apiReservarItem(id) {
+  const response = await fetch(`${API_BASE_URL}/item/reservar/${id}`, {
+    method: "PUT",
+    headers: getAuthHeaders(),
+  });
+  if (!response.ok) throw new Error("Erro ao reservar item");
+  return await response.json();
+}
+
+export async function apiListarPendentes() {
+  const response = await fetch(`${API_BASE_URL}/beneficiarios/pendentes`, {
+    method: "GET",
+    headers: getAuthHeaders(),
+  });
+  if (!response.ok) throw new Error("Erro ao listar pendentes");
+  return await response.json();
+}
+
+export async function apiAprovarBeneficiario(id) {
+  const response = await fetch(
+    `${API_BASE_URL}/beneficiarios/aprovar/${id}`,
+    {
+      method: "PUT",
+      headers: getAuthHeaders(),
+    }
+  );
+  if (!response.ok) throw new Error("Erro ao aprovar beneficiário");
+  return await response.json();
+}
+
+

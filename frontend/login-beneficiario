@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Benevo - Login Beneficiário</title>
+
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <link rel="stylesheet" href="assets/css/forms.css" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Shrikhand&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header class="header">
+        <h1 class="logo">Benevo</h1>
+    </header>
+
+    <main class="main-login-beneficiario"> <div class="titulo-container">
+            <a href="index.html" class="btn-voltar"><</a> 
+            <h2 class="titulo">Login Beneficiário</h2>
+        </div>
+
+        <br>
+        <br>
+
+        <div class="card-login-beneficiario"> <form id="form-login-benef">
+                <label for="id-benevo">ID Benevo</label>
+                <input type="text" id="id-benevo" placeholder="Digite seu ID Benevo" required />
+            </form>
+                <button type="submit" class="btn-entrar btn-entrar-beneficiario">Entrar</button>
+
+                <p class="link-ajuda">
+                <a href="ajuda-login-beneficiario.html">Não sabe seu ID? Clique aqui</a>
+            </p>
+        </div>
+        
+
+    </main>
+
+    </body>
+</html>
