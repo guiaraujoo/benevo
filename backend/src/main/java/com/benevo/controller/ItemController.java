@@ -1,5 +1,6 @@
 package com.benevo.controller;
 
+import com.benevo.dto.ItemResponseDTO;
 import com.benevo.dto.ItemCadastroDTO;
 import com.benevo.model.Item;
 import com.benevo.service.ItemService;
@@ -33,6 +34,10 @@ public class ItemController {
                     dto.getDescricao()
             );
 
+            System.out.println(">>> PROVA DE FOGO: DTO recebido com Doador ID: " + dto.getDoadorId());
+
+            item.setDoadorId(dto.getDoadorId());
+
             Item itemSalvo = itemService.registrarItem(item);
             return ResponseEntity.ok(itemSalvo);
         } catch (IllegalArgumentException e) {
@@ -44,9 +49,17 @@ public class ItemController {
     }
 
     // LISTAR TODOS OS ITENS
-    @GetMapping("/listar")
-    public ResponseEntity<List<Item>> listarItens() {
-        List<Item> itens = itemService.listarTodos();
+    @GetMapping("/buscar")
+    public ResponseEntity<List<ItemResponseDTO>> buscarItensComFiltros(
+        @RequestParam(required = false) String termo, 
+        @RequestParam(required = false) String condicao, // (Ainda podemos usá-lo para filtros futuros)
+        
+        // Novos parâmetros para ordenação
+        @RequestParam(required = false, defaultValue = "dataEntrada") String sortBy, 
+        @RequestParam(required = false, defaultValue = "DESC") String sortDir 
+    ) {
+        // Passe os novos parâmetros para o service
+        List<ItemResponseDTO> itens = itemService.listarItensComFiltros(termo, condicao, sortBy, sortDir);
         return ResponseEntity.ok(itens);
     }
 

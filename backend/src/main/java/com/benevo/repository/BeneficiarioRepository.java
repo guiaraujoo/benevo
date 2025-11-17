@@ -12,4 +12,5 @@ public interface BeneficiarioRepository extends MongoRepository<Beneficiario, St
     Optional<Beneficiario> findByIdBenevo(String idBenevo);
     List<Beneficiario> findByStatus(String status);
     List<Beneficiario> findByNomeCompletoContainingIgnoreCase(String nome);
+    Optional<Beneficiario> findByCpf(String cpf);
 }

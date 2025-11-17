@@ -11,6 +11,7 @@ public class ItemCadastroDTO {
     private String categoria;
     private String condicao;
     private String descricao;
+    private String doadorId;
 
     // Construtor padrão (obrigatório para o Spring converter JSON -> objeto)
     public ItemCadastroDTO() {}
@@ -30,4 +31,7 @@ public class ItemCadastroDTO {
 
     public String getDescricao() { return descricao; }
     public void setDescricao(String descricao) { this.descricao = descricao; }
+
+    public String getDoadorId() { return doadorId; }
+    public void setDoadorId(String doadorId) { this.doadorId = doadorId; }
 }

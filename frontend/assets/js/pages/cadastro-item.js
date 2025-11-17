@@ -38,16 +38,18 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         // 4. Monta o DTO
+        const doadorId = localStorage.getItem('user_id');
+
         const itemData = {
             nome: nome,
             categoria: categoria,
             descricao: descricao,
             condicao: condicao,
-            tamanho: tamanho
+            tamanho: tamanho,
+            doadorId: doadorId
         };
 
-        // NOVO: Recupera o token salvo pelo login do doador
-        const token = localStorage.getItem("token_doador");
+        const token = localStorage.getItem("token_benevo");
 
         if (!token) {
             alert('Erro: Nenhum doador logado. Faça login novamente antes de cadastrar um item.');

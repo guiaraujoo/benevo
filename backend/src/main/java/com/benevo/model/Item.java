@@ -17,6 +17,7 @@ public class Item {
     private String descricao;
     private String status;
     private LocalDateTime dataEntrada;
+    private String doadorId;
 
     public Item() {
     }
@@ -78,6 +79,8 @@ public class Item {
     public LocalDateTime getDataEntrada() { return dataEntrada; }
     public void setDataEntrada(LocalDateTime dataEntrada) { this.dataEntrada = dataEntrada; }
 
+    public String getDoadorId() { return doadorId; } // <-- ADICIONE GETTER
+    public void setDoadorId(String doadorId) { this.doadorId = doadorId; }
 
     @Override
     public String toString() {

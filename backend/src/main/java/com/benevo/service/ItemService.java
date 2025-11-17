@@ -1,13 +1,21 @@
 package com.benevo.service;
 
+import com.benevo.dto.ItemResponseDTO;
 import com.benevo.dto.ItemCadastroDTO;
 import com.benevo.model.Item;
+import com.benevo.repository.DoadorRepository;
 import com.benevo.repository.ItemRepository;
+import com.benevo.model.Doador;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +24,12 @@ public class ItemService {
 
     @Autowired
     private ItemRepository itemRepository;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
+    @Autowired
+    private DoadorRepository doadorRepository;
 
     // REGISTRAR ITEM
     public Item registrarItem(Item item) {
@@ -28,28 +42,65 @@ public class ItemService {
     }
 
     // LISTAR TODOS OS ITENS (sem filtros)
-    public List<Item> listarTodos() {
-        return itemRepository.findAll(Sort.by(Sort.Direction.DESC, "dataEntrada"));
-    }
+    public List<ItemResponseDTO> listarItensComFiltros(String termoBusca, String condicao, String sortBy, String sortDir) {
 
-
-    // LISTAR ITENS FILTRADOS (Fluxo 2)
-    public List<Item> listarItensFiltrados(String termoBusca, String sortData) {
-        Sort sort;
-
-        if ("ASC".equalsIgnoreCase(sortData)) {
-            sort = Sort.by(Sort.Direction.ASC, "dataEntrada");
-        } else {
-            sort = Sort.by(Sort.Direction.DESC, "dataEntrada");
-        }
+        // 1. CONSTRUIR A CONSULTA SIMPLES (como era na Sprint 2)
+        final Query query = new Query();
+        final List<Criteria> criterios = new ArrayList<>();
 
         if (termoBusca != null && !termoBusca.trim().isEmpty()) {
-            System.out.println("Service: Buscando por TERMO: " + termoBusca);
-            // ⚠️ Confirme com o Pedro o nome exato do método no ItemRepository
-            return itemRepository.findByNomeContainingIgnoreCaseOrCategoriaContainingIgnoreCase(termoBusca, termoBusca, sort);
+            criterios.add(new Criteria().orOperator(
+                Criteria.where("nome").regex(termoBusca, "i"),
+                Criteria.where("categoria").regex(termoBusca, "i")
+            ));
+        }
+        if (condicao != null && !condicao.trim().isEmpty()) {
+            criterios.add(Criteria.where("condicao").is(condicao));
         }
 
-        return itemRepository.findAll(sort);
+        if (!criterios.isEmpty()) {
+            query.addCriteria(new Criteria().andOperator(criterios.toArray(new Criteria[0])));
+        }
+
+        // 2. ORDENAÇÃO (como era na Sprint 2)
+        Sort.Direction direcao = "ASC".equalsIgnoreCase(sortDir) ? Sort.Direction.ASC : Sort.Direction.DESC;
+        String campoDeSort = "dataEntrada".equalsIgnoreCase(sortBy) ? "dataEntrada" : "condicao";
+        query.with(Sort.by(direcao, campoDeSort));
+
+        // 3. EXECUTAR A CONSULTA SIMPLES
+        // Isso retorna a lista de ITENS, mas sem o nome do doador.
+        List<Item> itensDoBanco = mongoTemplate.find(query, Item.class);
+
+        // 4. TRANSFORMAR E "ENRIQUECER" A LISTA (A Nova Lógica)
+        List<ItemResponseDTO> listaDeResposta = new ArrayList<>();
+
+        // Para cada item encontrado...
+        for (Item item : itensDoBanco) {
+            // Converte o Item para o nosso DTO de resposta
+            ItemResponseDTO dto = new ItemResponseDTO(item); //
+
+            // Agora, vamos buscar o nome do doador
+            if (item.getDoadorId() != null && !item.getDoadorId().isEmpty()) {
+                
+                // Busca no repositório de Doadores
+                Optional<Doador> doadorOpt = doadorRepository.findById(item.getDoadorId()); //
+
+                if (doadorOpt.isPresent()) {
+                    // Se achou, define o nome
+                    dto.setDoadorNome(doadorOpt.get().getNome()); //
+                } else {
+                    dto.setDoadorNome("ID Doador Inválido");
+                }
+            } else {
+                dto.setDoadorNome("Doação Anônima");
+            }
+
+            // Adiciona o DTO (agora completo) à lista final
+            listaDeResposta.add(dto);
+        }
+
+        // 5. RETORNAR A LISTA COMPLETA
+        return listaDeResposta;
     }
 
     // BUSCAR POR ID
@@ -67,14 +118,12 @@ public class ItemService {
 
         Item item = itemOpt.get();
 
-        // Atualiza apenas os campos permitidos
         item.setNome(dto.getNome());
         item.setCategoria(dto.getCategoria());
         item.setCondicao(dto.getCondicao());
         item.setTamanho(dto.getTamanho());
         item.setDescricao(dto.getDescricao());
 
-        // Validação antes de salvar
         validarItem(item);
 
         return itemRepository.save(item);

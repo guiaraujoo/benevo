@@ -19,26 +19,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
             fazerLogin(login, senha)
                 .then(data => {
-                    // Supondo que o backend retorna o usuário ou um token
-                    alert('Login bem-sucedido!');
+                    // 'data' AGORA É O NOSSO LoginResponseDTO:
+                    // { token: "...", tipo: "ADMIN", nome: "admin" }
+                    
+                    alert('Login bem-sucedido! Bem-vindo, ' + data.nome);
                     console.log('Resposta do login:', data);
 
-                    // --- NOVO: Armazena o token e tipo de usuário ---
-                    if (data.token) {
-                        // Verifica o tipo de usuário retornado pelo backend
-                        if (data.tipo === 'doador') {
-                            localStorage.setItem('token_doador', data.token);
-                        } else if (data.tipo === 'funcionario') {
-                            localStorage.setItem('token_funcionario', data.token);
-                        } else {
-                            console.warn('Tipo de usuário não reconhecido:', data.tipo);
-                        }
-                    } else {
-                        console.warn('Nenhum token retornado pelo backend.');
-                    }
+                    // SALVA TUDO NO LOCAL STORAGE
+                    localStorage.setItem('token_benevo', data.token);
+                    localStorage.setItem('user_tipo', data.tipo); // ESSENCIAL
+                    localStorage.setItem('user_nome', data.nome);   // BÔNUS
+                    localStorage.setItem('user_id', data.id);
 
-                    // --- NOVO: Redireciona para o dashboard ---
-                    window.location.href = 'dashboard-admin.html'; 
+                    // Redireciona com base no TIPO
+                    if (data.tipo === 'ADMIN') {
+                        window.location.href = 'dashboard-admin.html';
+                    } else if (data.tipo === 'DOADOR') {
+                        // Se um doador logar por aqui (talvez não deva)
+                        window.location.href = 'cadastro-item.html'; 
+                    } else {
+                        // Outros tipos, se houver
+                        window.location.href = 'index.html';
+                    }
                 })
                 .catch(error => {
                     console.error('Erro no login:', error);

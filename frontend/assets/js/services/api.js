@@ -49,7 +49,7 @@ export async function fazerLogin(login, senha) {
 // =====================================
 export async function cadastrarItem(itemData) {
   try {
-    const response = await fetch(`${API_BASE_URL}/itens`, {
+    const response = await fetch(`${API_BASE_URL}/item/cadastrar`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -60,7 +60,8 @@ export async function cadastrarItem(itemData) {
     });
 
     if (!response.ok) {
-      throw new Error("Erro ao cadastrar item");
+      const erro = await response.text(); 
+      throw new Error(erro);
     }
 
     const data = await response.json();
@@ -75,28 +76,26 @@ export async function cadastrarItem(itemData) {
 // ================================
 // BUSCAR ITENS COM FILTROS (GET)
 // ================================
-export async function getItemsComFiltros({ categoria, condicao }) {
+export async function apiBuscarItens(filtros, token) {
 
-    const queryParams = new URLSearchParams({
-        categoria,
-        condicao
-    }).toString();
-
-    const response = await fetch(`${API_BASE_URL}/itens?${queryParams}`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem("token_benevo")}` // <-- ATENÇÃO AQUI
-        }
-    });
-
-    if (!response.ok) {
-        throw new Error("Erro ao buscar itens");
+    const params = new URLSearchParams();
+    if (filtros.termo) {
+        params.append('termo', filtros.termo);
+    }
+    if (filtros.condicao) {
+        params.append('condicao', filtros.condicao);
+    }
+    if (filtros.sortData) {
+        params.append('sortData', filtros.sortData);
     }
 
-    const data = await response.json();
-    console.log("Itens filtrados:", data);
-    return data;
+    const response = await fetch(`${API_BASE_URL}/item/buscar?${params.toString()}`, {
+        method: "GET",
+        headers: getAuthHeaders()
+    });
+
+    if (!response.ok) throw new Error("Erro ao buscar itens");
+    return response.json();
 }
 
 // ================================

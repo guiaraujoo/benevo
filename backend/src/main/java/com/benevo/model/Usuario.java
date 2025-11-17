@@ -10,14 +10,16 @@ public class Usuario {
     private String id;
     private String login;
     private String senha;
+    private String role;
 
     public Usuario() {
     }
 
-    public Usuario(String id, String login, String senha){
+    public Usuario(String id, String login, String senha, String role){
         this.id = id;
         this.login = login;
         this.senha = senha;
+        this.role = role;
     }
 
     public String getId() {
@@ -43,4 +45,12 @@ public class Usuario {
     public void setSenha(String senha) {
         this.senha = senha;
     }
+
+    public String getRole() {
+        return role;
+    }
+    public void setRole(String role) {
+        this.role = role;
+    }
+
 }
