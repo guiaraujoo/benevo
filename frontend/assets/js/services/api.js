@@ -143,6 +143,77 @@ export async function apiEditarItem(id, itemData) {
 }
 
 // ================================
+// REGISTRAR BENEFICIÁRIO (POST)
+// ================================
+
+export async function apiRegistrarBeneficiario(benefData) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/beneficiarios/registrar`, {
+      method: "POST",
+      headers: getAuthHeaders(),
+      body: JSON.stringify(benefData),
+    });
+
+    if (!response.ok) throw new Error("Erro ao registrar beneficiário");
+
+    return await response.json();
+  } catch (error) {
+    console.error("Erro ao registrar beneficiário:", error);
+    throw error;
+  }
+}
+
+
+
+// ================================
+//  RESGATAR ITEM (PUT)
+// ================================
+
+export async function apiResgatarItem(id, dados) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/item/reservar/${id}`, {
+      method: "PUT",
+      headers: getAuthHeaders(),
+      body: JSON.stringify(dados),
+    });
+
+    if (!response.ok) throw new Error("Erro ao reservar item");
+
+    return await response.json();
+  } catch (error) {
+    console.error("Erro ao reservar item:", error);
+    throw error;
+  }
+}
+
+
+
+// ================================
+// RECUPERAR ID (POST)
+// (envia resposta de segurança e recebe ID de volta)
+// ================================
+
+export async function apiRecuperarId(dados) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/beneficiarios/recuperar-id`, {
+      method: "POST",
+      headers: getAuthHeaders(),
+      body: JSON.stringify(dados),
+    });
+
+    if (!response.ok) throw new Error("Erro ao recuperar ID");
+
+    return await response.json();
+  } catch (error) {
+    console.error("Erro ao recuperar ID:", error);
+    throw error;
+  }
+}
+
+
+
+
+// ================================
 // SPRINT 3 - DOADOR (FLUXO 1)
 // ================================
 
