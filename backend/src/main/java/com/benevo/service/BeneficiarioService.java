@@ -18,7 +18,7 @@ public class BeneficiarioService {
     public Beneficiario registrarBeneficiario(Beneficiario benef) {
         benef.setStatus("Pendente");
 
-        // Gera idBenevo (pode usar o CPF, ou um UUID)
+        // Gera idBenevo (pode usar o CPF ou um UUID)
         if (benef.getCpf() != null && !benef.getCpf().isEmpty()) {
             benef.setIdBenevo(benef.getCpf());
         } else {
@@ -44,8 +44,28 @@ public class BeneficiarioService {
         Optional<Beneficiario> porCpf = beneficiarioRepository.findByCpf(termoBusca);
         if (porCpf.isPresent()) return porCpf;
 
-        // Você pode adicionar buscas por nome ou email se quiser:
+        // Aqui você pode adicionar mais buscas (nome, email, etc)
         return Optional.empty();
     }
-}
 
+    // Recuperação de ID — usando pergunta e resposta de segurança
+    public String recuperarId(String nome, String pergunta, String resposta) {
+        // Buscar beneficiário pelo nome
+        Beneficiario benef = beneficiarioRepository.findByNome(nome);
+
+        if (benef == null) {
+            throw new RuntimeException("Beneficiário não encontrado.");
+        }
+
+        // Validar pergunta e resposta (ignorando maiúsculas/minúsculas)
+        boolean perguntaOk = benef.getPerguntaSeguranca().equalsIgnoreCase(pergunta);
+        boolean respostaOk = benef.getRespostaSeguranca().equalsIgnoreCase(resposta);
+
+        if (!perguntaOk || !respostaOk) {
+            throw new RuntimeException("Pergunta ou resposta de segurança incorretas.");
+        }
+
+        // Sucesso: retornar idBenevo
+        return benef.getIdBenevo();
+    }
+}
