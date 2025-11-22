@@ -133,120 +133,141 @@
     </main>
     
     <div id="modal-editar" class="modal">
-    <div class="modal-content">
-        <span class="close-button" onclick="closeModal()">&times;</span>
-        <h2 id="modalTitle">Detalhes e Status do Item</h2>
-        <form id="itemFormResgate"> 
-            <div class="form-group"><label for="nome">Nome:</label><input type="text" id="nome" name="nome" disabled></div>
-            <div class="form-group"><label for="tamanho">Tamanho:</label><input type="text" id="tamanho" name="tamanho" disabled></div>
-            <div class="form-group"><label for="categoria">Categoria:</label><input type="text" id="categoria" name="categoria" disabled></div>
-            <div class="form-group"><label for="doador">Doador:</label><input type="text" id="doador" name="doador" disabled></div>
-            
-            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ddd;">
-            
-            <div class="form-group"><label for="status_resgate">Status Atual:</label><input type="text" id="status_resgate" name="status_resgate" disabled></div>
-            <div class="form-group"><label for="data_retirada">Retirada Prevista:</label><input type="text" id="data_retirada" name="data_retirada" disabled></div>
-            <div class="form-group"><label for="local_retirada">Local de Retirada:</label><textarea id="local_retirada" name="local_retirada" disabled></textarea></div>
-            
-            <div class="modal-actions">
-                <button type="button" id="btnConfirmarResgate" class="btn-modal-salvar">Confirmar Resgate</button>
-                <button type="button" class="btn-modal-cancelar" onclick="closeModal()">Fechar</button>
-            </div>
-        </form>
-    </div>
+    <div class="modal-content">
+        <span class="close-button" onclick="closeModal()">&times;</span>
+        <h2 id="modalTitle">Detalhes e Status do Item</h2>
+        <form id="itemFormResgate"> 
+            <div class="form-group"><label for="nome">Nome:</label><input type="text" id="nome" name="nome" disabled></div>
+            <div class="form-group"><label for="tamanho">Tamanho:</label><input type="text" id="tamanho" name="tamanho" disabled></div>
+            <div class="form-group"><label for="categoria">Categoria:</label><input type="text" id="categoria" name="categoria" disabled></div>
+            <div class="form-group"><label for="doador">Doador:</label><input type="text" id="doador" name="doador" disabled></div>
+            
+            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ddd;">
+            
+            <div class="form-group"><label for="status_resgate">Status Atual:</label><input type="text" id="status_resgate" name="status_resgate" disabled></div>
+            <div class="form-group"><label for="data_retirada">Retirada Prevista:</label><input type="text" id="data_retirada" name="data_retirada" disabled></div>
+            <div class="form-group"><label for="local_retirada">Local de Retirada:</label><textarea id="local_retirada" name="local_retirada" disabled></textarea></div>
+            
+            <div class="modal-actions">
+                <button type="button" id="btnConfirmarResgate" class="btn-modal-salvar">Confirmar Resgate</button>
+                <button type="button" class="btn-modal-cancelar" onclick="closeModal()">Fechar</button>
+            </div>
+        </form>
+    </div>
 </div>
 
+<div id="modal-sucesso" class="modal">
+    <div class="modal-sucesso-content">
+        <i class="fas fa-check-circle success-icon"></i>
+        <h3 id="mensagemSucessoTitulo">Resgate Confirmado!</h3>
+        <p id="mensagemSucessoTexto">O item **[Nome do Item]** foi resgatado com sucesso. Você receberá as instruções de retirada por e-mail.</p>
+        <button type="button" class="btn-modal-ok" onclick="closeSuccessModal()">Entendido</button>
+    </div>
+</div>
 <script>
-    // Mapeamento de dados simulados para a página de Resgate, incluindo status e retirada
-    const RESGATE_MOCK_DATA = {
-        1: { 
-            nome: "Ursinho de Pelúcia Bege", 
-            tamanho: "M", 
-            categoria: "Brinquedo", 
-            doador: "Eliza Cordeiro", 
-            status: "Reservado - Aguardando Retirada", 
-            retirada: "05/01/2026", 
-            local: "Rua da Solidariedade, 123 - Centro A" 
-        },
-        2: { 
-            nome: "Camisa Sport", 
-            tamanho: "G", 
-            categoria: "Vestimenta", 
-            doador: "Kaiki Souza", 
-            status: "Disponível para Resgate", 
-            retirada: "Imediatamente", 
-            local: "Armazém Leste - Necessita Agendamento" 
-        },
-        3: { 
-            nome: "Panela de Pressão", 
-            tamanho: "P", 
-            categoria: "Utensílio", 
-            doador: "Altemar Galvão", 
-            status: "Reservado - Aguardando Retirada", 
-            retirada: "15/12/2025", 
-            local: "Av. Principal, 404 - Ponto de Coleta B" 
-        },
-        4: { 
-            nome: "Cadeira de Balanço", 
-            tamanho: "G", 
-            categoria: "Móvel", 
-            doador: "Lorena Laiz", 
-            status: "Disponível para Resgate", 
-            retirada: "Imediatamente", 
-            local: "Centro de Distribuição A" 
-        }
-    };
+    // Mapeamento de dados simulados para a página de Resgate, incluindo status e retirada
+    const RESGATE_MOCK_DATA = {
+        1: { 
+            nome: "Ursinho de Pelúcia Bege", 
+            tamanho: "M", 
+            categoria: "Brinquedo", 
+            doador: "Eliza Cordeiro", 
+            status: "Reservado - Aguardando Retirada", 
+            retirada: "05/01/2026", 
+            local: "Rua da Solidariedade, 123 - Centro A" 
+        },
+        2: { 
+            nome: "Camisa Sport", 
+            tamanho: "G", 
+            categoria: "Vestimenta", 
+            doador: "Kaiki Souza", 
+            status: "Disponível para Resgate", 
+            retirada: "Imediatamente", 
+            local: "Armazém Leste - Necessita Agendamento" 
+        },
+        3: { 
+            nome: "Panela de Pressão", 
+            tamanho: "P", 
+            categoria: "Utensílio", 
+            doador: "Altemar Galvão", 
+            status: "Reservado - Aguardando Retirada", 
+            retirada: "15/12/2025", 
+            local: "Av. Principal, 404 - Ponto de Coleta B" 
+        },
+        4: { 
+            nome: "Cadeira de Balanço", 
+            tamanho: "G", 
+            categoria: "Móvel", 
+            doador: "Lorena Laiz", 
+            status: "Disponível para Resgate", 
+            retirada: "Imediatamente", 
+            local: "Centro de Distribuição A" 
+        }
+    };
 
-    function openModal(mode, itemId) {
-        const modal = document.getElementById('modal-editar');
-        const modalTitle = document.getElementById('modalTitle');
-        const btnConfirmarResgate = document.getElementById('btnConfirmarResgate');
+    function closeModal() {
+        document.getElementById('modal-editar').classList.remove('visivel');
+    }
 
-        const data = RESGATE_MOCK_DATA[itemId];
+    function openSuccessModal(itemName) {
+        document.getElementById('mensagemSucessoTexto').innerHTML = 
+            `O item <b>${itemName}</b> foi resgatado com sucesso. Você receberá as instruções de retirada por e-mail.`;
+        document.getElementById('modal-sucesso').classList.add('visivel');
+    }
 
-        // Define o título e mostra o modal
-        modalTitle.textContent = `Detalhes do Item #${itemId}`;
-        modal.classList.add('visivel');
+    function closeSuccessModal() {
+        document.getElementById('modal-sucesso').classList.remove('visivel');
+    }
 
-        // Popula os campos básicos
-        document.getElementById('nome').value = data.nome;
-        document.getElementById('tamanho').value = data.tamanho;
-        document.getElementById('categoria').value = data.categoria;
-        document.getElementById('doador').value = data.doador;
-        
-        // Popula os campos de Resgate/Retirada (AS NOVAS INFORMAÇÕES)
-        document.getElementById('status_resgate').value = data.status;
-        document.getElementById('data_retirada').value = data.retirada;
-        document.getElementById('local_retirada').value = data.local;
+    function openModal(mode, itemId) {
+        const modal = document.getElementById('modal-editar');
+        const modalTitle = document.getElementById('modalTitle');
+        const btnConfirmarResgate = document.getElementById('btnConfirmarResgate');
 
-        // Lógica do Botão: Muda de "CONFIRMAR RESGATE" para "ITEM RESERVADO"
-        if (data.status === 'Disponível para Resgate') {
-            btnConfirmarResgate.textContent = 'CONFIRMAR RESGATE';
-            btnConfirmarResgate.disabled = false;
-            btnConfirmarResgate.style.backgroundColor = '#28a745'; // Verde
-            
-            btnConfirmarResgate.onclick = () => {
-                alert(`Item ${itemId} - ${data.nome} RESGATADO com sucesso! Você receberá as instruções de retirada.`);
-                closeModal();
-            };
-        } else {
-            btnConfirmarResgate.textContent = 'ITEM RESERVADO';
-            btnConfirmarResgate.disabled = true;
-            btnConfirmarResgate.style.backgroundColor = '#6c757d'; // Cinza
-            btnConfirmarResgate.onclick = null;
-        }
-    }
+        const data = RESGATE_MOCK_DATA[itemId];
 
-    function closeModal() {
-        document.getElementById('modal-editar').classList.remove('visivel');
-    }
+        // Define o título e mostra o modal
+        modalTitle.textContent = `Detalhes do Item #${itemId}`;
+        modal.classList.add('visivel');
 
-    // Fecha o modal ao clicar fora
-    window.onclick = function(event) {
-        if (event.target == document.getElementById('modal-editar')) {
-            closeModal();
-        }
-    }
+        // Popula os campos básicos
+        document.getElementById('nome').value = data.nome;
+        document.getElementById('tamanho').value = data.tamanho;
+        document.getElementById('categoria').value = data.categoria;
+        document.getElementById('doador').value = data.doador;
+        
+        // Popula os campos de Resgate/Retirada (AS NOVAS INFORMAÇÕES)
+        document.getElementById('status_resgate').value = data.status;
+        document.getElementById('data_retirada').value = data.retirada;
+        document.getElementById('local_retirada').value = data.local;
+
+        // Lógica do Botão: Muda de "CONFIRMAR RESGATE" para "ITEM RESERVADO"
+        if (data.status === 'Disponível para Resgate') {
+            btnConfirmarResgate.textContent = 'CONFIRMAR RESGATE';
+            btnConfirmarResgate.disabled = false;
+            btnConfirmarResgate.style.backgroundColor = '#28a745'; // Verde
+            
+            btnConfirmarResgate.onclick = () => {
+                closeModal(); // Fecha o modal de detalhes
+                openSuccessModal(data.nome); // Abre o modal de sucesso
+            };
+        } else {
+            btnConfirmarResgate.textContent = 'ITEM RESERVADO';
+            btnConfirmarResgate.disabled = true;
+            btnConfirmarResgate.style.backgroundColor = '#6c757d'; // Cinza
+            btnConfirmarResgate.onclick = null;
+        }
+    }
+
+    // Fecha o modal ao clicar fora (Verifica os dois modais)
+    window.onclick = function(event) {
+        if (event.target == document.getElementById('modal-editar')) {
+            closeModal();
+        }
+        if (event.target == document.getElementById('modal-sucesso')) {
+            closeSuccessModal();
+        }
+    }
 </script>
 </body>
 </html>
