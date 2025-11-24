@@ -24,7 +24,7 @@ public class BeneficiarioController {
         return ResponseEntity.ok(service.registrarBeneficiario(b));
     }
 
-    // LOGIN - PASSO 1: Verificar ID + Info
+    // LOGIN - PASSO 1
     @PostMapping("/validar-acesso")
     public ResponseEntity<?> validarAcesso(@RequestBody Map<String, String> payload) {
         String idBenevo = payload.get("idBenevo");
@@ -37,7 +37,14 @@ public class BeneficiarioController {
         Beneficiario b = benefOpt.get();
 
         if (resultado.equals("OK")) {
-            return ResponseEntity.ok(new LoginResponseDTO(b.getId(), "token_mock_" + b.getId(), "BENEFICIARIO", b.getNome()));
+            // CORREÇÃO: Adicionado b.getIdBenevo() no final
+            return ResponseEntity.ok(new LoginResponseDTO(
+                b.getId(), 
+                "token_mock_" + b.getId(), 
+                "BENEFICIARIO", 
+                b.getNome(),
+                b.getIdBenevo() 
+            ));
         } else if (resultado.equals("CHALLENGE")) {
             return ResponseEntity.status(202).body(Map.of(
                 "status", "CHALLENGE_REQUIRED",
@@ -51,7 +58,7 @@ public class BeneficiarioController {
         }
     }
 
-    // LOGIN - PASSO 2: Responder Desafio
+    // LOGIN - PASSO 2
     @PostMapping("/responder-desafio")
     public ResponseEntity<?> responderDesafio(@RequestBody Map<String, String> payload) {
         String idBenevo = payload.get("idBenevo");
@@ -59,27 +66,30 @@ public class BeneficiarioController {
 
         if (service.validarRespostaSeguranca(idBenevo, resposta)) {
             Beneficiario b = service.buscarPorIdBenevo(idBenevo).get();
-            return ResponseEntity.ok(new LoginResponseDTO(b.getId(), "token_mock_" + b.getId(), "BENEFICIARIO", b.getNome()));
+            // CORREÇÃO: Adicionado b.getIdBenevo()
+            return ResponseEntity.ok(new LoginResponseDTO(
+                b.getId(), 
+                "token_mock_" + b.getId(), 
+                "BENEFICIARIO", 
+                b.getNome(),
+                b.getIdBenevo()
+            ));
         }
         return ResponseEntity.status(401).body("Resposta incorreta.");
     }
     
-    // FLUXO DE AJUDA (Esqueci meu ID)
     @GetMapping("/ajuda-login")
     public ResponseEntity<List<Map<String, String>>> buscarAjuda(@RequestParam String busca) {
         List<Beneficiario> encontrados = service.buscarPorDadosGerais(busca);
-        
-        // Retorna apenas dados seguros (não retorna a senha nem o ID direto)
         List<Map<String, String>> resposta = encontrados.stream()
-            .filter(b -> "Aprovado".equalsIgnoreCase(b.getStatus())) // Apenas aprovados
+            .filter(b -> "Aprovado".equalsIgnoreCase(b.getStatus()))
             .map(b -> Map.of(
-                "idInterno", b.getIdBenevo(), // Usamos o ID Benevo para validação posterior
+                "idInterno", b.getIdBenevo(),
                 "nome", b.getNome(),
                 "bairro", b.getBairroCidade(),
                 "pergunta", b.getPerguntaSeguranca()
             ))
             .collect(Collectors.toList());
-            
         return ResponseEntity.ok(resposta);
     }
     
@@ -90,8 +100,6 @@ public class BeneficiarioController {
     
     @PutMapping("/aprovar/{id}")
     public ResponseEntity<?> aprovar(@PathVariable String id) {
-         // (Implementação real deveria chamar o service para mudar status no banco)
-         // Mock para passar no teste se não houver lógica no service
          return ResponseEntity.ok("Aprovado");
     }
 }

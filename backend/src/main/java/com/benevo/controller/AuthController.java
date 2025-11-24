@@ -27,11 +27,13 @@ public class AuthController {
 
         if (usuarioOpt.isPresent()) {
             Usuario usuario = usuarioOpt.get();
+            // CORREÇÃO: Adicionado null no final
             LoginResponseDTO resposta = new LoginResponseDTO(
                 usuario.getId(),
                 "token_admin_mock_" + usuario.getId(),
                 usuario.getRole(),
-                usuario.getLogin()
+                usuario.getLogin(),
+                null
             );
             return ResponseEntity.ok(resposta);
         } else {

@@ -6,7 +6,8 @@
     <title>Benevo - Recuperar ID</title>
     <link rel="stylesheet" href="assets/css/styles.css" />
     <link rel="stylesheet" href="assets/css/forms.css" />
-    <link rel="stylesheet" href="assets/css/modal.css" /> <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/modal.css" /> 
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Shrikhand&display=swap" rel="stylesheet">
     
     <style>
@@ -111,7 +112,7 @@
         });
 
         function abrirModalSeguranca(user) {
-            idSelecionado = user.idInterno; // ID Benevo (ex: JOSE-123)
+            idSelecionado = user.idInterno; // Este já é o ID Benevo (JOSE-123)
             document.getElementById('pergunta-seguranca').innerText = user.pergunta;
             document.getElementById('resposta-modal').value = '';
             modal.classList.add('visivel');
@@ -120,7 +121,6 @@
         document.getElementById('btn-confirmar-seguranca').onclick = async () => {
             const resposta = document.getElementById('resposta-modal').value;
             
-            // Reutiliza o endpoint de desafio do login
             try {
                 const res = await fetch(`${API_BASE_URL}/beneficiarios/responder-desafio`, {
                     method: "POST",
@@ -131,11 +131,12 @@
                 if(res.ok) {
                     const loginData = await res.json();
                     
-                    alert(`Identidade Confirmada!\nSeu ID é: ${loginData.id}\nVocê será logado agora.`);
+                    // CORREÇÃO AQUI: loginData.idBenevo mostra o ID curto e amigável
+                    alert(`Identidade Confirmada!\n\nSEU ID DE ACESSO É: ${loginData.idBenevo}\n\nVocê será logado agora.`);
                     
                     // Login Automático
                     localStorage.setItem("token_benevo", loginData.token);
-                    localStorage.setItem("user_id", loginData.id); // ID do banco (Mongo)
+                    localStorage.setItem("user_id", loginData.id); // ID do banco para operações internas
                     localStorage.setItem("user_nome", loginData.nome);
                     localStorage.setItem("user_tipo", "BENEFICIARIO");
                     

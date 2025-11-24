@@ -17,7 +17,6 @@ public class DoadorController {
     @Autowired
     private DoadorService doadorService;
 
-    // Endpoint para registrar um novo doador
     @PostMapping("/registrar")
     public ResponseEntity<?> registrarDoador(@RequestBody Doador doador) {
         try {
@@ -28,7 +27,6 @@ public class DoadorController {
         }
     }
 
-    // Endpoint para login do doador
     @PostMapping("/login")
     public ResponseEntity<?> loginDoador(@RequestBody Doador loginRequest) {
         Optional<Doador> doadorOpt = doadorService.autenticarDoador(
@@ -38,11 +36,13 @@ public class DoadorController {
 
         if (doadorOpt.isPresent()) {
             Doador doador = doadorOpt.get();
+            // CORREÇÃO: Adicionado null no final (Doador não tem ID curto)
             LoginResponseDTO resposta = new LoginResponseDTO(
                 doador.getId(),
                 "token_doador_mock_" + doador.getId(),
                 "DOADOR",
-                doador.getNome()
+                doador.getNome(),
+                null 
             );
             return ResponseEntity.ok(resposta);
         } else {
