@@ -99,6 +99,25 @@ public class ItemController {
             return ResponseEntity.status(404).body("Item não encontrado.");
         }
     }
+    
+    // RESGATAR ITEM
+        @PutMapping("/resgatar/{itemId}")
+    public ResponseEntity<?> resgatarItem(
+        @PathVariable String itemId,
+        @RequestParam String beneficiarioId) {
+    try {
+        
+        Item item = itemService.resgatarItem(itemId, beneficiarioId);
+            return ResponseEntity.ok(item);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        } catch (Exception e) {
+        e.printStackTrace();
+            return ResponseEntity.internalServerError().body("Erro inesperado ao resgatar o item.");
+        }
+    }
 }
 
     
