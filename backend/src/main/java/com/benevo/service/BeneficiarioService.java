@@ -6,7 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.UUID;
+import java.util.Random;
+import java.util.List;
 
 @Service
 public class BeneficiarioService {
@@ -14,58 +15,54 @@ public class BeneficiarioService {
     @Autowired
     private BeneficiarioRepository beneficiarioRepository;
 
-    // Registrar novo beneficiário
     public Beneficiario registrarBeneficiario(Beneficiario benef) {
-        benef.setStatus("Pendente");
-
-        // Gera idBenevo (pode usar o CPF ou um UUID)
-        if (benef.getCpf() != null && !benef.getCpf().isEmpty()) {
-            benef.setIdBenevo(benef.getCpf());
-        } else {
-            benef.setIdBenevo(UUID.randomUUID().toString());
+        benef.setStatus("Aprovado");
+        
+        // LÓGICA DE ID FÁCIL (Ex: MAR-824)
+        String prefixo = "USR";
+        if (benef.getNome() != null && benef.getNome().length() >= 3) {
+            prefixo = benef.getNome().substring(0, 3).toUpperCase();
+            // Remove espaços se houver (ex: "A B" -> "AB")
+            prefixo = prefixo.replaceAll("\\s+", "");
         }
+        
+        int numeroAleatorio = new Random().nextInt(900) + 100; // Gera entre 100 e 999
+        String idFacil = prefixo + "-" + numeroAleatorio;
 
+        benef.setIdBenevo(idFacil); 
         return beneficiarioRepository.save(benef);
     }
 
-    // Autenticar beneficiário (só se aprovado)
-    public Optional<Beneficiario> autenticarBeneficiario(String idBenevo) {
+    public String verificarCredenciaisIniciais(String idBenevo, String infoSecundaria) {
+        Optional<Beneficiario> benefOpt = beneficiarioRepository.findByIdBenevo(idBenevo);
+
+        if (benefOpt.isEmpty()) return "FAIL";
+        
+        Beneficiario b = benefOpt.get();
+        if (!"Aprovado".equalsIgnoreCase(b.getStatus())) return "PENDENTE";
+
+        String info = infoSecundaria.trim().toLowerCase();
+        String bairroReal = (b.getBairroCidade() != null) ? b.getBairroCidade().toLowerCase() : "";
+        String nomeReal = b.getNome().toLowerCase();
+        
+        if (bairroReal.contains(info)) return "OK"; 
+        if (nomeReal.equals(info)) return "OK";
+        if (nomeReal.contains(info)) return "CHALLENGE";
+    
+        return "FAIL";
+    }
+
+    public Optional<Beneficiario> buscarPorIdBenevo(String idBenevo) {
+        return beneficiarioRepository.findByIdBenevo(idBenevo);
+    }
+
+    public boolean validarRespostaSeguranca(String idBenevo, String resposta) {
         Optional<Beneficiario> benef = beneficiarioRepository.findByIdBenevo(idBenevo);
-
-        if (benef.isPresent() && "Aprovado".equalsIgnoreCase(benef.get().getStatus())) {
-            return benef;
-        }
-
-        return Optional.empty();
+        if (benef.isEmpty()) return false;
+        return benef.get().getRespostaSeguranca().equalsIgnoreCase(resposta.trim());
     }
-
-    // Ajuda de login — busca por nome, cpf ou email
-    public Optional<Beneficiario> ajudaLogin(String termoBusca) {
-        Optional<Beneficiario> porCpf = beneficiarioRepository.findByCpf(termoBusca);
-        if (porCpf.isPresent()) return porCpf;
-
-        // Aqui você pode adicionar mais buscas (nome, email, etc)
-        return Optional.empty();
-    }
-
-    // Recuperação de ID — usando pergunta e resposta de segurança
-    public String recuperarId(String nome, String pergunta, String resposta) {
-        // Buscar beneficiário pelo nome
-        Beneficiario benef = beneficiarioRepository.findByNome(nome);
-
-        if (benef == null) {
-            throw new RuntimeException("Beneficiário não encontrado.");
-        }
-
-        // Validar pergunta e resposta (ignorando maiúsculas/minúsculas)
-        boolean perguntaOk = benef.getPerguntaSeguranca().equalsIgnoreCase(pergunta);
-        boolean respostaOk = benef.getRespostaSeguranca().equalsIgnoreCase(resposta);
-
-        if (!perguntaOk || !respostaOk) {
-            throw new RuntimeException("Pergunta ou resposta de segurança incorretas.");
-        }
-
-        // Sucesso: retornar idBenevo
-        return benef.getIdBenevo();
+    
+    public List<Beneficiario> buscarPorDadosGerais(String termo) {
+        return beneficiarioRepository.findByNomeContainingIgnoreCaseOrBairroCidadeContainingIgnoreCase(termo, termo);
     }
 }

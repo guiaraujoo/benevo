@@ -166,9 +166,8 @@ public class ItemService {
     }
 
 
-    // RESGATAR ITEM (Fluxo 4)
+    // RESGATAR ITEM (Fluxo 4) - CORRIGIDO
     public Item resgatarItem(String itemId, String beneficiarioId) {
-        // Buscar o item
         Optional<Item> itemOpt = itemRepository.findById(itemId);
 
         if (itemOpt.isEmpty()) {
@@ -177,15 +176,15 @@ public class ItemService {
 
         Item item = itemOpt.get();
 
+        // Verifica se está disponível (ignorando maiúsculas/minúsculas para segurança)
         if (!"Disponível".equalsIgnoreCase(item.getStatus())) {
-            throw new RuntimeException("Somente itens com status 'Disponível' podem ser resgatados.");
+            throw new RuntimeException("Item indisponível. Status atual: " + item.getStatus());
         }
 
-
         item.setStatus("Aguardando Retirada");
-        item.setBeneficiarioId(beneficiarioId);
+        // CORREÇÃO: O nome do campo no Model é beneficiarioResgateId
+        item.setBeneficiarioResgateId(beneficiarioId); 
 
-        // Salvar alterações
         return itemRepository.save(item);
     }
 

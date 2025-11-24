@@ -10,8 +10,6 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Shrikhand&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
 <body>
@@ -22,142 +20,49 @@
     <main>
         <div class="titulo-container">
             <a href="index.html" class="btn-voltar"><</a>
-            <h2 class="titulo">Cadastro Beneficiário</h2>
+            <h2 class="titulo">Novo Beneficiário</h2>
         </div>
 
         <div class="card-cadastro">
             <form id="form-cad-beneficiario">
                 
                 <div class="form-group-cadastro full-width">
-                    <label for="nome-beneficiario">Nome da Instituição / Pessoa:</label>
-                    <input type="text" id="nome-beneficiario" name="nome-beneficiario" placeholder="Nome completo ou Razão Social" required />
-                </div>
-                
-                <div class="form-group-cadastro full-width">
-                    <label for="email-beneficiario">Email:</label>
-                    <input type="email" id="email-beneficiario" name="email-beneficiario" placeholder="contato@instituicao.com" required />
-                </div>
-                
-                <div class="form-row-cadastro">
-                    <div class="form-group-cadastro senha-group">
-                        <label for="senha-beneficiario">Senha:</label>
-                        <input type="password" id="senha-beneficiario" name="senha-beneficiario" required />
-                        <i class="fas fa-check-circle validation-icon"></i>
-                        
-                        <div class="password-rules">
-                            <ul>
-                                <li>Mínimo 6 caracteres</li>
-                                <li>Maiúscula, minúscula e número</li>
-                                <li>Caracter especial</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group-cadastro cep-group">
-                        <label for="cep-beneficiario">CEP:</label>
-                        <input type="text" id="cep-beneficiario" name="cep-beneficiario" placeholder="00000-000" required />
-                    </div>
-                </div>
-
-                <div class="form-row-cadastro">
-                    <div class="form-group-cadastro telefone-group">
-                        <label for="telefone-beneficiario">Telefone:</label>
-                        <input type="tel" id="telefone-beneficiario" name="telefone-beneficiario" placeholder="(99) 99999-9999" required />
-                    </div>
-                    
-                    <div class="form-group-cadastro foto-group">
-                        <label>Logo / Foto de Perfil</label>
-                        <div class="upload-area" id="upload-perfil-beneficiario">
-                            <i class="fas fa-plus upload-icon"></i>
-                            </div>
-                        <input type="file" id="foto-perfil-beneficiario" name="foto-perfil-beneficiario" accept="image/*" class="file-input-hidden" />
-                    </div>
-                </div>
-                
-                <div class="form-group-cadastro full-width">
-                    <label for="documento-principal-beneficiario">CNPJ / CPF:</label>
-                    <input type="text" id="documento-principal-beneficiario" name="documento-principal-beneficiario" placeholder="00.000.000/0000-00 ou 000.000.000-00" required />
+                    <label>Nome Completo:</label>
+                    <input type="text" id="nome" required placeholder="Ex: Maria da Silva">
                 </div>
 
                 <div class="form-group-cadastro full-width">
-                    <label>Comprovação Legal (RG, CNPJ, etc.):</label>
-                    <div class="upload-area" id="upload-comprovacao-beneficiario">
-                        <i class="fas fa-upload upload-icon"></i>
-                        <span class="upload-text">Anexar documento</span> 
-                    </div>
-                    <input type="file" id="documento-comprovacao" name="documento-comprovacao" accept=".pdf, image/*" class="file-input-hidden" required />
+                    <label>Local (Bairro/Cidade):</label>
+                    <input type="text" id="local" required placeholder="Ex: Centro, Recife">
+                    <small style="color: #ccc; font-size: 0.7rem;">Usado para confirmar sua identidade no login.</small>
                 </div>
-                
+
+                <div class="form-row-cadastro">
+                     <div class="form-group-cadastro">
+                        <label>Email (Opcional):</label>
+                        <input type="email" id="email">
+                     </div>
+                     <div class="form-group-cadastro">
+                        <label>Telefone (Opcional):</label>
+                        <input type="text" id="telefone">
+                     </div>
+                </div>
+
                 <div class="form-group-cadastro full-width separador-seguranca">
-                    <label class="titulo-seguranca-label"> Pergunta de Segurança (Recuperação)</label>
-
-                    <label for="pergunta-seguranca-benef">Pergunta Chave:</label>
-                    <select id="pergunta-seguranca-benef" required>
-                        <option value="" disabled selected>Escolha uma pergunta para recuperação de senha...</option>
-                        <option value="mae">Qual o nome da sua mãe?</option>
-                        <option value="pet">Qual o nome do seu primeiro animal de estimação?</option>
-                        <option value="fundacao">Qual o ano de fundação da Instituição?</option>
-                        <option value="cidade_fundacao">Em qual cidade a Instituição foi fundada?</option>
-                    </select>
-
-                    <label for="resposta-seguranca-benef">Resposta Secreta:</label>
-                    <input type="text" id="resposta-seguranca-benef" placeholder="Sua resposta secreta" required />
+                    <label class="titulo-seguranca-label">Segurança (Para recuperar seu ID)</label>
+                    
+                    <label>Pergunta Secreta (Crie uma):</label>
+                    <input type="text" id="pergunta" required placeholder="Ex: Qual apelido da minha mãe?">
+                    
+                    <label>Resposta:</label>
+                    <input type="text" id="resposta" required placeholder="Sua resposta aqui">
                 </div>
-                <button type="submit" class="btn-cadastrar">Cadastrar e Solicitar Aprovação</button>
 
-                <p class="ja-tem-conta">Já tem uma conta? <a href="login-beneficiario.html">Faça login.</a></p>
-
+                <button type="submit" class="btn-cadastrar">Solicitar Cadastro</button>
             </form>
         </div>
     </main>
-    <script>
-        /**
-         * Função para atualizar o rótulo de upload após a seleção de um arquivo.
-         * @param {string} inputId - O ID do input de arquivo.
-         * @param {string} areaId - O ID da div .upload-area que será atualizada.
-         * @param {string} defaultContent - O HTML do conteúdo padrão (ícone e texto).
-         */
-        function handleFileUploadDisplay(inputId, areaId, defaultContent) {
-            document.getElementById(inputId).addEventListener('change', function(e) {
-                const label = document.getElementById(areaId);
-                if (e.target.files.length > 0) {
-                    label.innerHTML = `<span style="color: #28a745; font-size: 0.8rem; font-weight: 600;">✅ Arquivo: ${e.target.files[0].name}</span>`;
-                } else {
-                    label.innerHTML = defaultContent;
-                }
-            });
-        }
-        
-        // Aplica a função para o upload de Perfil/Logo
-        handleFileUploadDisplay(
-            'foto-perfil-beneficiario', 
-            'upload-perfil-beneficiario', 
-            '<i class="fas fa-plus upload-icon"></i>'
-        );
-
-        // Aplica a função para o upload de Comprovação Legal
-        handleFileUploadDisplay(
-            'documento-comprovacao', 
-            'upload-comprovacao-beneficiario', 
-            '<i class="fas fa-upload upload-icon"></i> <span class="upload-text">Anexar documento</span>'
-        );
-        
-        // Simulação do envio do formulário
-        document.getElementById('form-cad-beneficiario').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const nome = document.getElementById('nome-beneficiario').value;
-            const pergunta = document.getElementById('pergunta-seguranca-benef').value;
-            
-            console.log(`Cadastro de Beneficiário: ${nome} enviado para aprovação.`);
-            
-            // Usando o alert nativo, mas com a função local para debug
-            alert('📝 Cadastro enviado para aprovação! Você será notificado por e-mail.');
-        });
-
-        function alert(message) {
-            window.alert(message);
-        }
-    </script>
+    
+    <script type="module" src="assets/js/pages/cadastro-beneficiario.js"></script>
 </body>
 </html>

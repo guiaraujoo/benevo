@@ -1,49 +1,36 @@
-// IMPORTANTE: Importar a funções da API
 import { apiRegistrarBeneficiario } from '../services/api.js';
 
-// Espera o carregamento do DOM antes de ligar os eventos.
-document.addEventListener("DOMContentLoaded", function () {
-    console.log("cadastro-beneficiario.js carregado");
+document.getElementById("form-cad-beneficiario").addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-    const form = document.getElementsById("form-cad-beneficiario");
-
-    if (!form) {
-        console.error("Erro: Formulário #form-cad-beneficiario não encontrado");
+    const local = document.getElementById("local").value;
+    
+    if (local.length < 3) {
+        alert("Por favor, digite um local válido (pelo menos 3 letras).");
         return;
     }
-    form.addEventListener("submit", async function (event) {
-        event.preventDefault();
 
-        //Coleta dos valores
-        const nome = document.getElementById("nome").ariaValueMax;
-        const cpf = getElementById("cpf").value;
-        const endereco = document.getElementById("endereço").value;
-        const pergunta = document.getElementsById("pergunta").value;
-        const resposta = document.getElementById("resposta").value;
+    const data = {
+        nome: document.getElementById("nome").value,
+        bairroCidade: local,
+        email: document.getElementById("email").value || null,
+        telefone: document.getElementById("telefone").value || null,
+        perguntaSeguranca: document.getElementById("pergunta").value,
+        respostaSeguranca: document.getElementById("resposta").value,
+        categoriasInteresse: []
+    };
 
-        if (!nome || !cpf || !endereco || !pergunta || !resposta) {
-            alert("Preencha todos os campos obrigatórios!");
-            return;
-        }
-
-        const beneficiarioData = {
-            nome,
-            cpf,
-            endereco,
-            pergunta,
-            resposta
-        };
-
-        console.log("Enviando beneficiário para API:", beneficiarioData)
-
-        try{
-            const data = awaitRegistrarBeneficiario(beneficiarioData);
-            alert("Cadastro realizado com sucesso!");
-            console.log("Cadastro:", data);
-            form.reset();
-        }catch (error) {
-            console.error("Erro ao cadastrar beneficiário:", error);
-            alert("Erro no cadastro.");
-        }
-    });
+    try {
+        const res = await apiRegistrarBeneficiario(data);
+        
+        // Mostra o ID gerado e instrui o usuário
+        alert(`Cadastro realizado com sucesso!\n\nSEU ID DE ACESSO É: ${res.idBenevo}\n\nPor favor, anote este ID. Você será redirecionado para o login.`);
+        
+        // CORREÇÃO: Redireciona para a tela de login do beneficiário
+        window.location.href = "login-beneficiario.html";
+        
+    } catch (err) {
+        console.error(err);
+        alert("Erro ao cadastrar: " + err.message);
+    }
 });

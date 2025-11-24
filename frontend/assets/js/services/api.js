@@ -1,7 +1,7 @@
 // benevo-project/frontend/assets/js/services/api.js
 
 // URL base da API      
-const API_BASE_URL = "http://localhost:8080";
+export const API_BASE_URL = "http://localhost:8080";
 
 // ============================================
 // FUNÇÕES DE AUTENTICAÇÃO (token e headers)
@@ -20,7 +20,7 @@ function getAuthHeaders() {
 }
 
 // =====================================
-// LOGIN
+// LOGIN GERAL (ADMIN)
 // =====================================
 export async function fazerLogin(login, senha) {
   try {
@@ -35,8 +35,7 @@ export async function fazerLogin(login, senha) {
     }
 
     const data = await response.json();
-    localStorage.setItem("token", data.token);
-    console.log("Login bem-sucedido:", data);
+    // Nota: O controller retorna { id, token, tipo, nome }
     return data;
   } catch (error) {
     console.error("Erro no login:", error);
@@ -45,17 +44,13 @@ export async function fazerLogin(login, senha) {
 }
 
 // =====================================
-// CADASTRAR ITEM
+// CADASTRAR ITEM (DOADOR)
 // =====================================
 export async function cadastrarItem(itemData) {
   try {
     const response = await fetch(`${API_BASE_URL}/item/cadastrar`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        // Se o backend usar token:
-        // "Authorization": `Bearer ${localStorage.getItem("token")}`,
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(itemData),
     });
 
@@ -65,7 +60,6 @@ export async function cadastrarItem(itemData) {
     }
 
     const data = await response.json();
-    console.log("Item cadastrado com sucesso:", data);
     return data;
   } catch (error) {
     console.error("Erro ao cadastrar item:", error);
@@ -74,24 +68,20 @@ export async function cadastrarItem(itemData) {
 }
 
 // ================================
-// BUSCAR ITENS COM FILTROS (GET)
+// BUSCAR ITENS (GET)
 // ================================
-export async function apiBuscarItens(filtros, token) {
-
+export async function apiBuscarItens(filtros) {
     const params = new URLSearchParams();
-    if (filtros.termo) {
-        params.append('termo', filtros.termo);
-    }
-    if (filtros.condicao) {
-        params.append('condicao', filtros.condicao);
-    }
-    if (filtros.sortData) {
-        params.append('sortData', filtros.sortData);
-    }
+    
+    if (filtros.termo) params.append('termo', filtros.termo);
+    if (filtros.condicao) params.append('condicao', filtros.condicao);
+    if (filtros.sortBy) params.append('sortBy', filtros.sortBy);
+    if (filtros.sortDir) params.append('sortDir', filtros.sortDir);
 
+    // Nota: Busca geralmente é pública, mas se precisar de auth, descomente o header
     const response = await fetch(`${API_BASE_URL}/item/buscar?${params.toString()}`, {
         method: "GET",
-        headers: getAuthHeaders()
+        // headers: getAuthHeaders() 
     });
 
     if (!response.ok) throw new Error("Erro ao buscar itens");
@@ -99,121 +89,106 @@ export async function apiBuscarItens(filtros, token) {
 }
 
 // ================================
-// DELETAR ITEM (DELETE)
+// GESTÃO DE ITENS (ADMIN/DOADOR)
 // ================================
 
 export async function apiDeletarItem(id) {
-  try {
-    const response = await fetch(`${API_BASE_URL}/item/deletar/${id}`, {
-      method: "DELETE",
-      headers: getAuthHeaders(),
-    });
+  const response = await fetch(`${API_BASE_URL}/item/deletar/${id}`, {
+    method: "DELETE",
+    headers: getAuthHeaders(),
+  });
 
-    if (!response.ok) throw new Error("Erro ao deletar item");
-
-    console.log("Item deletado com sucesso!");
-  } catch (error) {
-    console.error("Erro ao deletar item:", error);
-    throw error;
-  }
+  if (!response.ok) throw new Error("Erro ao deletar item");
 }
-
-// ================================
-// EDITAR ITEM (PUT)
-// ================================
 
 export async function apiEditarItem(id, itemData) {
-  try {
-    const response = await fetch(`${API_BASE_URL}/item/atualizar/${id}`, {
-      method: "PUT",
-      headers: getAuthHeaders(),
-      body: JSON.stringify(itemData),
-    });
+  const response = await fetch(`${API_BASE_URL}/item/atualizar/${id}`, {
+    method: "PUT",
+    headers: getAuthHeaders(),
+    body: JSON.stringify(itemData),
+  });
 
-    if (!response.ok) throw new Error("Erro ao editar item");
-
-    const data = await response.json();
-    console.log("Item atualizado:", data);
-    return data;
-  } catch (error) {
-    console.error("Erro ao editar item:", error);
-    throw error;
-  }
+  if (!response.ok) throw new Error("Erro ao editar item");
+  return await response.json();
 }
 
 // ================================
-// REGISTRAR BENEFICIÁRIO (POST)
+//  RESGATAR ITEM (BENEFICIÁRIO)
+// ================================
+// Esta é a versão correta que recebe DOIS parâmetros
+export async function apiReservarItem(itemId, beneficiarioId) {
+  const response = await fetch(`${API_BASE_URL}/item/resgatar/${itemId}?beneficiarioId=${beneficiarioId}`, {
+    method: "PUT",
+    headers: getAuthHeaders(),
+  });
+
+  if (!response.ok) {
+      const erro = await response.text();
+      throw new Error(erro || "Erro ao resgatar item");
+  }
+  return await response.json();
+}
+
+// ================================
+// BENEFICIÁRIO (CADASTRO E LOGIN)
 // ================================
 
 export async function apiRegistrarBeneficiario(benefData) {
-  try {
-    const response = await fetch(`${API_BASE_URL}/beneficiarios/registrar`, {
-      method: "POST",
-      headers: getAuthHeaders(),
-      body: JSON.stringify(benefData),
-    });
+  // Cadastro é público, sem Auth header
+  const response = await fetch(`${API_BASE_URL}/beneficiarios/registrar`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(benefData),
+  });
 
-    if (!response.ok) throw new Error("Erro ao registrar beneficiário");
-
-    return await response.json();
-  } catch (error) {
-    console.error("Erro ao registrar beneficiário:", error);
-    throw error;
+  if (!response.ok) {
+     const erro = await response.text();
+     throw new Error(erro || "Erro ao registrar beneficiário");
   }
+  return await response.json();
 }
-
-
-
-// ================================
-//  RESGATAR ITEM (PUT)
-// ================================
-
-export async function apiResgatarItem(id, dados) {
-  try {
-    const response = await fetch(`${API_BASE_URL}/item/reservar/${id}`, {
-      method: "PUT",
-      headers: getAuthHeaders(),
-      body: JSON.stringify(dados),
-    });
-
-    if (!response.ok) throw new Error("Erro ao reservar item");
-
-    return await response.json();
-  } catch (error) {
-    console.error("Erro ao reservar item:", error);
-    throw error;
-  }
-}
-
-
-
-// ================================
-// RECUPERAR ID (POST)
-// (envia resposta de segurança e recebe ID de volta)
-// ================================
 
 export async function apiRecuperarId(dados) {
-  try {
-    const response = await fetch(`${API_BASE_URL}/beneficiarios/recuperar-id`, {
-      method: "POST",
-      headers: getAuthHeaders(),
-      body: JSON.stringify(dados),
-    });
+  const response = await fetch(`${API_BASE_URL}/beneficiarios/recuperar-id`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" }, // Recuperação pública
+    body: JSON.stringify(dados),
+  });
 
-    if (!response.ok) throw new Error("Erro ao recuperar ID");
-
-    return await response.json();
-  } catch (error) {
-    console.error("Erro ao recuperar ID:", error);
-    throw error;
-  }
+  if (!response.ok) throw new Error("Erro ao recuperar ID");
+  return await response.json();
 }
 
+export async function apiAjudarLogin(termoBusca) {
+  const response = await fetch(`${API_BASE_URL}/beneficiarios/ajuda-login?busca=${termoBusca}`, {
+      method: "GET",
+      // Ajuda login é pública
+  });
+  if (!response.ok) throw new Error("Erro ao buscar ajuda de login");
+  return await response.json();
+}
 
+export async function apiListarPendentes() {
+  const response = await fetch(`${API_BASE_URL}/beneficiarios/pendentes`, {
+    method: "GET",
+    headers: getAuthHeaders(),
+  });
+  if (!response.ok) throw new Error("Erro ao listar pendentes");
+  return await response.json();
+}
 
+export async function apiAprovarBeneficiario(id) {
+  const response = await fetch(`${API_BASE_URL}/beneficiarios/aprovar/${id}`, {
+      method: "PUT",
+      headers: getAuthHeaders(),
+    }
+  );
+  if (!response.ok) throw new Error("Erro ao aprovar beneficiário");
+  return await response.json();
+}
 
 // ================================
-// SPRINT 3 - DOADOR (FLUXO 1)
+// DOADOR (CADASTRO E LOGIN)
 // ================================
 
 export async function apiRegistrarDoador(doadorData) {
@@ -235,75 +210,3 @@ export async function apiLoginDoador(email, senha) {
   if (!response.ok) throw new Error("Erro no login do doador");
   return await response.json();
 }
-
-// ================================
-// SPRINT 3 - BENEFICIÁRIO (FLUXO 3)
-// ================================
-
-export async function apiRegistrarBeneficiario(benefData) {
-  const response = await fetch(`${API_BASE_URL}/beneficiarios/registrar`, {
-    method: "POST",
-    headers: getAuthHeaders(),
-    body: JSON.stringify(benefData),
-  });
-  if (!response.ok) throw new Error("Erro ao registrar beneficiário");
-  return await response.json();
-}
-
-export async function apiLoginBeneficiario(idBenevo) {
-  const response = await fetch(`${API_BASE_URL}/beneficiarios/login`, {
-    method: "POST",
-    headers: getAuthHeaders(),
-    body: JSON.stringify({ idBenevo }),
-  });
-  if (!response.ok) throw new Error("Erro no login do beneficiário");
-  return await response.json();
-}
-
-export async function apiAjudarLogin(termoBusca) {
-  const response = await fetch(
-    `${API_BASE_URL}/beneficiarios/ajuda-login?busca=${termoBusca}`,
-    {
-      method: "GET",
-      headers: getAuthHeaders(),
-    }
-  );
-  if (!response.ok) throw new Error("Erro ao buscar ajuda de login");
-  return await response.json();
-}
-
-// ================================
-// SPRINT 3 - RESGATE E APROVAÇÃO
-// ================================
-
-export async function apiReservarItem(id) {
-  const response = await fetch(`${API_BASE_URL}/item/reservar/${id}`, {
-    method: "PUT",
-    headers: getAuthHeaders(),
-  });
-  if (!response.ok) throw new Error("Erro ao reservar item");
-  return await response.json();
-}
-
-export async function apiListarPendentes() {
-  const response = await fetch(`${API_BASE_URL}/beneficiarios/pendentes`, {
-    method: "GET",
-    headers: getAuthHeaders(),
-  });
-  if (!response.ok) throw new Error("Erro ao listar pendentes");
-  return await response.json();
-}
-
-export async function apiAprovarBeneficiario(id) {
-  const response = await fetch(
-    `${API_BASE_URL}/beneficiarios/aprovar/${id}`,
-    {
-      method: "PUT",
-      headers: getAuthHeaders(),
-    }
-  );
-  if (!response.ok) throw new Error("Erro ao aprovar beneficiário");
-  return await response.json();
-}
-
-
