@@ -1,53 +1,55 @@
 package com.benevo.model;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.util.List;
-
-@Document(collection = "beneficiarios")
 public class Beneficiario {
+    private Long id;
+    private String nome;
+    private String email;
+    private String telefone;
 
-    @Id
-    private String id;
-    private String nomeCompleto;
-    private String cpf;
-    private String endereco;
-    private List<String> categoriasInteresse;
+    // Novos campos para recuperação de conta
+    private String emailRecuperacao;
+    private String telefoneRecuperacao;
 
-    // Para login e aprovação
-    private String idBenevo;
-    private String status; // Ex: "Pendente", "Aprovado"
-
+    // Construtor
     public Beneficiario() {}
 
-    public Beneficiario(String nomeCompleto, String cpf, String endereco, List<String> categoriasInteresse, String idBenevo, String status) {
-        this.nomeCompleto = nomeCompleto;
-        this.cpf = cpf;
-        this.endereco = endereco;
-        this.categoriasInteresse = categoriasInteresse;
-        this.idBenevo = idBenevo;
-        this.status = status;
+    public Beneficiario(Long id, String nome, String email, String telefone, String emailRecuperacao, String telefoneRecuperacao) {
+        this.id = id;
+        this.nome = nome;
+        this.email = email;
+        this.telefone = telefone;
+        this.emailRecuperacao = emailRecuperacao;
+        this.telefoneRecuperacao = telefoneRecuperacao;
     }
 
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    // Getters e Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public String getNomeCompleto() { return nomeCompleto; }
-    public void setNomeCompleto(String nomeCompleto) { this.nomeCompleto = nomeCompleto; }
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
 
-    public String getCpf() { return cpf; }
-    public void setCpf(String cpf) { this.cpf = cpf; }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public String getEndereco() { return endereco; }
-    public void setEndereco(String endereco) { this.endereco = endereco; }
+    public String getTelefone() { return telefone; }
+    public void setTelefone(String telefone) { this.telefone = telefone; }
 
-    public List<String> getCategoriasInteresse() { return categoriasInteresse; }
-    public void setCategoriasInteresse(List<String> categoriasInteresse) { this.categoriasInteresse = categoriasInteresse; }
+    public String getEmailRecuperacao() { return emailRecuperacao; }
+    public void setEmailRecuperacao(String emailRecuperacao) { this.emailRecuperacao = emailRecuperacao; }
 
-    public String getIdBenevo() { return idBenevo; }
-    public void setIdBenevo(String idBenevo) { this.idBenevo = idBenevo; }
+    public String getTelefoneRecuperacao() { return telefoneRecuperacao; }
+    public void setTelefoneRecuperacao(String telefoneRecuperacao) { this.telefoneRecuperacao = telefoneRecuperacao; }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    @Override
+    public String toString() {
+        return "Beneficiario{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                ", email='" + email + '\'' +
+                ", telefone='" + telefone + '\'' +
+                ", emailRecuperacao='" + emailRecuperacao + '\'' +
+                ", telefoneRecuperacao='" + telefoneRecuperacao + '\'' +
+                '}';
+    }
 }

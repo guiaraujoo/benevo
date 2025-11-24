@@ -165,6 +165,31 @@ public class ItemService {
         return itemRepository.save(item);
     }
 
+
+    // RESGATAR ITEM (Fluxo 4)
+    public Item resgatarItem(String itemId, String beneficiarioId) {
+        // Buscar o item
+        Optional<Item> itemOpt = itemRepository.findById(itemId);
+
+        if (itemOpt.isEmpty()) {
+            throw new RuntimeException("Item com ID " + itemId + " não encontrado.");
+        }
+
+        Item item = itemOpt.get();
+
+        if (!"Disponível".equalsIgnoreCase(item.getStatus())) {
+            throw new RuntimeException("Somente itens com status 'Disponível' podem ser resgatados.");
+        }
+
+
+        item.setStatus("Aguardando Retirada");
+        item.setBeneficiarioId(beneficiarioId);
+
+        // Salvar alterações
+        return itemRepository.save(item);
+    }
+
+
     // Validação de regras de negócio
     private void validarItem(Item item) {
         if (isNullOrEmpty(item.getNome()))

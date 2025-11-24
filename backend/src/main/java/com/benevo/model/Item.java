@@ -4,7 +4,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.annotation.Id;
 import java.time.LocalDateTime;
 
-
 @Document(collection = "itens")
 public class Item {
 
@@ -18,6 +17,9 @@ public class Item {
     private String status;
     private LocalDateTime dataEntrada;
     private String doadorId;
+
+    // Novo campo para saber quem resgatou o item
+    private String beneficiarioResgateId;
 
     public Item() {
     }
@@ -79,8 +81,16 @@ public class Item {
     public LocalDateTime getDataEntrada() { return dataEntrada; }
     public void setDataEntrada(LocalDateTime dataEntrada) { this.dataEntrada = dataEntrada; }
 
-    public String getDoadorId() { return doadorId; } // <-- ADICIONE GETTER
+    public String getDoadorId() { return doadorId; }
     public void setDoadorId(String doadorId) { this.doadorId = doadorId; }
+
+    // Getter e Setter do novo campo
+    public String getBeneficiarioResgateId() {
+        return beneficiarioResgateId;
+    }
+    public void setBeneficiarioResgateId(String beneficiarioResgateId) {
+        this.beneficiarioResgateId = beneficiarioResgateId;
+    }
 
     @Override
     public String toString() {
@@ -93,7 +103,8 @@ public class Item {
                 ", descricao='" + descricao + '\'' +
                 ", status='" + status + '\'' +
                 ", dataEntrada=" + dataEntrada +
+                ", doadorId='" + doadorId + '\'' +
+                ", beneficiarioResgateId='" + beneficiarioResgateId + '\'' +
                 '}';
     }
-
 }

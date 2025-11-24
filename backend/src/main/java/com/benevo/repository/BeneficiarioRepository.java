@@ -10,6 +10,7 @@ import java.util.Optional;
 @Repository
 public interface BeneficiarioRepository extends MongoRepository<Beneficiario, String> {
     Optional<Beneficiario> findByIdBenevo(String idBenevo);
+    Beneficiario findByNome(String nome);
     List<Beneficiario> findByStatus(String status);
     List<Beneficiario> findByNomeCompletoContainingIgnoreCase(String nome);
     Optional<Beneficiario> findByCpf(String cpf);
