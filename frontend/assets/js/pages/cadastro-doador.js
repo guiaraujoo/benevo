@@ -28,11 +28,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const s1 = senhaInput.value;
         const s2 = confirmaInput.value;
 
-        // Regra tamanho
         if (s1.length >= 6) ruleLength.className = 'valid';
         else ruleLength.className = '';
 
-        // Regra igualdade
         if (s1 && s1 === s2) ruleMatch.className = 'valid';
         else ruleMatch.className = '';
     }
@@ -40,8 +38,34 @@ document.addEventListener("DOMContentLoaded", () => {
     senhaInput.addEventListener('input', validarSenhas);
     confirmaInput.addEventListener('input', validarSenhas);
 
+    // --- MODAL DE SUCESSO ---
+    const modal = document.createElement("div");
+    modal.id = "modal-sucesso";
+    modal.style.display = "none";
+    modal.className = "modal-sucesso";
+
+    modal.innerHTML = `
+        <div class="modal-sucesso-conteudo">
+            <h2>Cadastro concluído!</h2>
+            <p>Obrigado por se juntar à Benevo! Agora você pode acessar sua conta e fazer doações.</p>
+            <button id="btn-ir-login" class="btn-modal">Ir para Login</button>
+        </div>
+    `;
+    document.body.appendChild(modal);
+
+    function abrirModalSucesso() {
+        modal.style.display = "flex";
+    }
+
+    document.addEventListener("click", (e) => {
+        if (e.target.id === "btn-ir-login") {
+            window.location.href = "login-doador.html";
+        }
+    });
+
     // --- SUBMIT ---
     const form = document.getElementById("form-cad-doador");
+
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
 
@@ -67,8 +91,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
             await apiRegistrarDoador(doadorData);
-            alert("Cadastro realizado com sucesso! Faça seu login.");
-            window.location.href = "login-doador.html";
+            
+            // Abre modal personalizado
+            abrirModalSucesso();
+            
         } catch (error) {
             alert("Erro ao cadastrar: " + error.message);
         }
