@@ -17,6 +17,7 @@
 //     @Autowired private UsuarioRepository usuarioRepository;
 //     @Autowired private DoadorRepository doadorRepository;
 //     @Autowired private BeneficiarioRepository beneficiarioRepository;
+//     @Autowired private PasswordEncoder passwordEncoder;
 
 //     @Override
 //     public void run(String... args) throws Exception {
