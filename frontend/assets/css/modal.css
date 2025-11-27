@@ -342,3 +342,22 @@
   cursor: pointer;
   font-weight: 600;
 }
+
+#modal-sucesso-cadastro { 
+  display: none; 
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.6);
+  /* Centralização */
+  justify-content: center; 
+  align-items: center;
+}
+
+#modal-sucesso-cadastro.visivel {
+  display: flex; 
+}
