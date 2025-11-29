@@ -33,47 +33,24 @@ public class Item {
         this.descricao = descricao;
     }
 
-    public String getId() {
-        return id;
-    }
-    public void setId(String id) {
-        this.id = id;
-    }
+    // Getters e Setters
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
-    public String getNome() {
-        return nome;
-    }
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
 
-    public String getCategoria() {
-        return categoria;
-    }
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
-    }
+    public String getCategoria() { return categoria; }
+    public void setCategoria(String categoria) { this.categoria = categoria; }
 
-    public String getCondicao() {
-        return condicao;
-    }
-    public void setCondicao(String condicao) {
-        this.condicao = condicao;
-    }
+    public String getCondicao() { return condicao; }
+    public void setCondicao(String condicao) { this.condicao = condicao; }
 
-    public String getTamanho() {
-        return tamanho;
-    }
-    public void setTamanho(String tamanho) {
-        this.tamanho = tamanho;
-    }
+    public String getTamanho() { return tamanho; }
+    public void setTamanho(String tamanho) { this.tamanho = tamanho; }
 
-    public String getDescricao() {
-        return descricao;
-    }
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
+    public String getDescricao() { return descricao; }
+    public void setDescricao(String descricao) { this.descricao = descricao; }
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
@@ -84,13 +61,8 @@ public class Item {
     public String getDoadorId() { return doadorId; }
     public void setDoadorId(String doadorId) { this.doadorId = doadorId; }
 
-    // Getter e Setter do novo campo
-    public String getBeneficiarioResgateId() {
-        return beneficiarioResgateId;
-    }
-    public void setBeneficiarioResgateId(String beneficiarioResgateId) {
-        this.beneficiarioResgateId = beneficiarioResgateId;
-    }
+    public String getBeneficiarioResgateId() { return beneficiarioResgateId; }
+    public void setBeneficiarioResgateId(String beneficiarioResgateId) { this.beneficiarioResgateId = beneficiarioResgateId; }
 
     @Override
     public String toString() {
