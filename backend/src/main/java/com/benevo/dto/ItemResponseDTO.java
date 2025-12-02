@@ -1,17 +1,14 @@
 package com.benevo.dto;
 
-import com.benevo.model.Item; // Importe o Item
+import com.benevo.model.Item;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
-// @Data e @NoArgsConstructor (do Lombok) criam os getters/setters/construtores
-// Se você não usa Lombok, crie-os manualmente.
-@Data 
-@NoArgsConstructor 
+@Data
+@NoArgsConstructor
 public class ItemResponseDTO {
 
-    // Todos os campos do Item
     private String id;
     private String nome;
     private String categoria;
@@ -21,11 +18,8 @@ public class ItemResponseDTO {
     private String status;
     private LocalDateTime dataEntrada;
     private String doadorId;
-
-    // O novo campo que queremos "juntar"
     private String doadorNome;
 
-    // Construtor para facilitar a conversão
     public ItemResponseDTO(Item item) {
         this.id = item.getId();
         this.nome = item.getNome();

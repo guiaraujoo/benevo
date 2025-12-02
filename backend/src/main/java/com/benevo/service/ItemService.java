@@ -34,72 +34,77 @@ public class ItemService {
     // REGISTRAR ITEM
     public Item registrarItem(Item item) {
         validarItem(item);
-
         item.setStatus("Disponível");
         item.setDataEntrada(LocalDateTime.now());
-
         return itemRepository.save(item);
     }
 
-    // LISTAR TODOS OS ITENS (sem filtros)
+    // LISTAR TODOS OS ITENS (Com Filtros Dinâmicos e Ordenação)
     public List<ItemResponseDTO> listarItensComFiltros(String termoBusca, String condicao, String sortBy, String sortDir) {
 
-        // 1. CONSTRUIR A CONSULTA SIMPLES (como era na Sprint 2)
         final Query query = new Query();
         final List<Criteria> criterios = new ArrayList<>();
 
+        // 1. Filtro por Termo (Nome ou Categoria)
         if (termoBusca != null && !termoBusca.trim().isEmpty()) {
             criterios.add(new Criteria().orOperator(
-                Criteria.where("nome").regex(termoBusca, "i"),
-                Criteria.where("categoria").regex(termoBusca, "i")
+                    Criteria.where("nome").regex(termoBusca, "i"),
+                    Criteria.where("categoria").regex(termoBusca, "i")
             ));
         }
+
+        // 2. Filtro por Condição (Ex: "Novo", "Usado")
         if (condicao != null && !condicao.trim().isEmpty()) {
             criterios.add(Criteria.where("condicao").is(condicao));
         }
 
+        // Adiciona critérios à query se existirem
         if (!criterios.isEmpty()) {
             query.addCriteria(new Criteria().andOperator(criterios.toArray(new Criteria[0])));
         }
 
-        // 2. ORDENAÇÃO (como era na Sprint 2)
-        Sort.Direction direcao = "ASC".equalsIgnoreCase(sortDir) ? Sort.Direction.ASC : Sort.Direction.DESC;
-        String campoDeSort = "dataEntrada".equalsIgnoreCase(sortBy) ? "dataEntrada" : "condicao";
-        query.with(Sort.by(direcao, campoDeSort));
+        // 3. Ordenação Robusta
+        // Default: Data de Entrada (Mais recentes primeiro)
+        String campoSort = "dataEntrada";
+        Sort.Direction direcao = Sort.Direction.DESC;
 
-        // 3. EXECUTAR A CONSULTA SIMPLES
-        // Isso retorna a lista de ITENS, mas sem o nome do doador.
+        if (sortBy != null && !sortBy.trim().isEmpty()) {
+            if ("condicao".equalsIgnoreCase(sortBy)) {
+                campoSort = "condicao";
+            } else if ("nome".equalsIgnoreCase(sortBy)) {
+                campoSort = "nome";
+            }
+            // Se não for condicao nem nome, mantém dataEntrada
+        }
+
+        if (sortDir != null && !sortDir.trim().isEmpty()) {
+            direcao = "ASC".equalsIgnoreCase(sortDir) ? Sort.Direction.ASC : Sort.Direction.DESC;
+        }
+
+        query.with(Sort.by(direcao, campoSort));
+
+        // 4. Execução
         List<Item> itensDoBanco = mongoTemplate.find(query, Item.class);
 
-        // 4. TRANSFORMAR E "ENRIQUECER" A LISTA (A Nova Lógica)
+        // 5. Enriquecimento (DTO)
         List<ItemResponseDTO> listaDeResposta = new ArrayList<>();
 
-        // Para cada item encontrado...
         for (Item item : itensDoBanco) {
-            // Converte o Item para o nosso DTO de resposta
-            ItemResponseDTO dto = new ItemResponseDTO(item); //
+            ItemResponseDTO dto = new ItemResponseDTO(item);
 
-            // Agora, vamos buscar o nome do doador
             if (item.getDoadorId() != null && !item.getDoadorId().isEmpty()) {
-                
-                // Busca no repositório de Doadores
-                Optional<Doador> doadorOpt = doadorRepository.findById(item.getDoadorId()); //
-
+                Optional<Doador> doadorOpt = doadorRepository.findById(item.getDoadorId());
                 if (doadorOpt.isPresent()) {
-                    // Se achou, define o nome
-                    dto.setDoadorNome(doadorOpt.get().getNome()); //
+                    dto.setDoadorNome(doadorOpt.get().getNome());
                 } else {
-                    dto.setDoadorNome("ID Doador Inválido");
+                    dto.setDoadorNome("Doador não encontrado");
                 }
             } else {
                 dto.setDoadorNome("Doação Anônima");
             }
-
-            // Adiciona o DTO (agora completo) à lista final
             listaDeResposta.add(dto);
         }
 
-        // 5. RETORNAR A LISTA COMPLETA
         return listaDeResposta;
     }
 
@@ -129,7 +134,7 @@ public class ItemService {
         return itemRepository.save(item);
     }
 
-    // DELETAR ITEM (nova regra de negócio - RN002)
+    // DELETAR ITEM (RN002)
     public boolean deletarItem(String id) {
         Optional<Item> itemOpt = itemRepository.findById(id);
 
@@ -165,8 +170,7 @@ public class ItemService {
         return itemRepository.save(item);
     }
 
-
-    // RESGATAR ITEM (Fluxo 4) - CORRIGIDO
+    // RESGATAR ITEM (Fluxo 4)
     public Item resgatarItem(String itemId, String beneficiarioId) {
         Optional<Item> itemOpt = itemRepository.findById(itemId);
 
@@ -176,35 +180,22 @@ public class ItemService {
 
         Item item = itemOpt.get();
 
-        // Verifica se está disponível (ignorando maiúsculas/minúsculas para segurança)
         if (!"Disponível".equalsIgnoreCase(item.getStatus())) {
             throw new RuntimeException("Item indisponível. Status atual: " + item.getStatus());
         }
 
         item.setStatus("Aguardando Retirada");
-        // CORREÇÃO: O nome do campo no Model é beneficiarioResgateId
-        item.setBeneficiarioResgateId(beneficiarioId); 
+        item.setBeneficiarioResgateId(beneficiarioId);
 
         return itemRepository.save(item);
     }
 
-
-    // Validação de regras de negócio
     private void validarItem(Item item) {
-        if (isNullOrEmpty(item.getNome()))
-            throw new IllegalArgumentException("O nome do item é obrigatório.");
-
-        if (isNullOrEmpty(item.getCategoria()))
-            throw new IllegalArgumentException("A categoria é obrigatória.");
-
-        if (isNullOrEmpty(item.getCondicao()))
-            throw new IllegalArgumentException("A condição é obrigatória.");
-
-        if (isNullOrEmpty(item.getTamanho()))
-            throw new IllegalArgumentException("O tamanho é obrigatório.");
-
-        if (isNullOrEmpty(item.getDescricao()))
-            throw new IllegalArgumentException("A descrição é obrigatória.");
+        if (isNullOrEmpty(item.getNome())) throw new IllegalArgumentException("O nome do item é obrigatório.");
+        if (isNullOrEmpty(item.getCategoria())) throw new IllegalArgumentException("A categoria é obrigatória.");
+        if (isNullOrEmpty(item.getCondicao())) throw new IllegalArgumentException("A condição é obrigatória.");
+        if (isNullOrEmpty(item.getTamanho())) throw new IllegalArgumentException("O tamanho é obrigatório.");
+        if (isNullOrEmpty(item.getDescricao())) throw new IllegalArgumentException("A descrição é obrigatória.");
     }
 
     private boolean isNullOrEmpty(String valor) {

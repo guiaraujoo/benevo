@@ -6,23 +6,25 @@ import org.springframework.beans.factory.annotation.Autowired; // o spring pra c
 import org.springframework.stereotype.Service; // a etiqueta de servico
 
 import java.util.Optional;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-// a etiqueta @Service diz pro spring que essa classe cuida das RN
 @Service
 public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    // MUDA DE 'boolean' PARA 'Optional<Usuario>'
-    public Optional<Usuario> autenticar(String login, String senha) {
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    public Optional<Usuario> autenticar(String login, String senhaPlana) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findByLogin(login);
 
         if (usuarioOpt.isPresent()) {
             Usuario usuarioDoBanco = usuarioOpt.get();
-            if (usuarioDoBanco.getSenha().equals(senha)) {
-                return usuarioOpt; // RETORNA O USUÁRIO INTEIRO
+            if (passwordEncoder.matches(senhaPlana, usuarioDoBanco.getSenha())) {
+                return usuarioOpt;
             }
         }
-        return Optional.empty(); // Senha errada OU usuário não existe
+        return Optional.empty();
     }
 }
