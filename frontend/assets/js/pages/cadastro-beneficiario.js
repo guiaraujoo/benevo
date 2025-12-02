@@ -1,36 +1,60 @@
 import { apiRegistrarBeneficiario } from '../services/api.js';
 
+// 1. Obtenção dos elementos do Modal
+const modalSucesso = document.getElementById('modal-sucesso-cadastro');
+const beneficiaryIdDisplay = document.getElementById('beneficiaryIdDisplay');
+const btnEntendido = document.getElementById('btn-entendido-cadastro');
+
+function mostrarModalSucesso(id) {
+    beneficiaryIdDisplay.textContent = id;
+    modalSucesso.classList.add('visivel');
+}
+
+function fecharModalSucesso() {
+    modalSucesso.classList.remove('visivel');
+    window.location.href = 'login-beneficiario.html'; 
+}
+
+btnEntendido.addEventListener('click', fecharModalSucesso);
+
+
 document.getElementById("form-cad-beneficiario").addEventListener("submit", async (e) => {
     e.preventDefault();
+    
+    const btnCadastrar = document.querySelector('.btn-cadastrar');
+    btnCadastrar.disabled = true;
+    btnCadastrar.textContent = 'Aguarde...';
 
     const local = document.getElementById("local").value;
     
     if (local.length < 3) {
         alert("Por favor, digite um local válido (pelo menos 3 letras).");
+        btnCadastrar.disabled = false;
+        btnCadastrar.textContent = 'Solicitar Cadastro';
         return;
     }
-
+    
     const data = {
         nome: document.getElementById("nome").value,
         bairroCidade: local,
         email: document.getElementById("email").value || null,
         telefone: document.getElementById("telefone").value || null,
         perguntaSeguranca: document.getElementById("pergunta").value,
-        respostaSeguranca: document.getElementById("resposta").value,
-        categoriasInteresse: []
+        respostaSeguranca: document.getElementById("resposta").value, // Adicionei resposta para completar o objeto
     };
 
     try {
-        const res = await apiRegistrarBeneficiario(data);
-        
-        // Mostra o ID gerado e instrui o usuário
-        alert(`Cadastro realizado com sucesso!\n\nSEU ID DE ACESSO É: ${res.idBenevo}\n\nPor favor, anote este ID. Você será redirecionado para o login.`);
-        
-        // CORREÇÃO: Redireciona para a tela de login do beneficiário
-        window.location.href = "login-beneficiario.html";
-        
-    } catch (err) {
-        console.error(err);
-        alert("Erro ao cadastrar: " + err.message);
+        const resultado = await apiRegistrarBeneficiario(data); 
+
+        mostrarModalSucesso(resultado.id); 
+
+    } catch (error) {
+        alert("Erro no cadastro: " + (error.message || "Tente novamente mais tarde."));
+        console.error("Detalhes do erro:", error);
+    } finally {
+        if (!modalSucesso.classList.contains('visivel')) {
+            btnCadastrar.disabled = false;
+            btnCadastrar.textContent = 'Solicitar Cadastro';
+        }
     }
 });

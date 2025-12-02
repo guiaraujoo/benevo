@@ -11,7 +11,7 @@
 // --- IMPORTAÇÕES ---
 // (Note que importamos 'getItemsComFiltros' e não 'apiBuscarItens')
 import {
-  apiBuscarItens as getItemsComFiltros,
+  apiBuscarItens,
   apiEditarItem,
   apiDeletarItem,
 } from "../services/api.js";
@@ -47,7 +47,7 @@ async function carregarItens(filtros = {}) {
   console.log("Carregando itens com filtros:", filtros);
   try {
     // Chama a função CORRETA do api.js
-    const itens = await getItemsComFiltros(filtros);
+    const itens = await apiBuscarItens(filtros);
 
     // Limpa a grid antes de adicionar novos itens
     itemGrid.innerHTML = "";
@@ -79,8 +79,7 @@ function renderizarItemCard(item) {
   // Mapeia a condição (ex: "5") para o texto (ex: "5/5")
   const estadoTexto = `${item.condicao || "N/A"}/5`;
 
-  card.innerHTML = `
-    <img src="img/ursinho-dashboard.jpg" alt="${item.nome}" class="item-image"> 
+  card.innerHTML = ` 
     <div class="item-info">
         <p><strong>Nome:</strong> ${item.nome}</p>
         <p><strong>Tamanho:</strong> ${item.tamanho || "N/A"}</p>
