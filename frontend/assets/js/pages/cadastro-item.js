@@ -1,136 +1,100 @@
-// IMPORTANTE: Adicione esta linha no topo do arquivo.
 import { cadastrarItem } from '../services/api.js';
 
-/**
- * Aguarda o carregamento completo do DOM antes de anexar os ouvintes de evento.
- */
 document.addEventListener("DOMContentLoaded", function () {
     
-    // DEBUG: Confirma que o script está rodando e o DOM está pronto.
-    console.log('Script cadastro-item.js carregado e pronto.');
-
-    const formDoacao = document.getElementById('form-doacao');
-
-    // DEBUG: Verifica se o formulário foi encontrado
-    if (formDoacao) {
-        console.log('Formulário #form-doacao encontrado. Anexando ouvinte.');
-    } else {
-        console.error('ERRO: Formulário #form-doacao NÃO encontrado.');
+    // 1. CHECAGEM DUPLA:
+    // A) Admin está logado?
+    const adminToken = localStorage.getItem("token_benevo");
+    if (!adminToken) {
+        alert("Sessão do Admin expirou.");
+        window.location.href = "index.html";
         return;
     }
 
-    formDoacao.addEventListener('submit', function (event) {
-        
-        event.preventDefault(); 
-        console.log('Submit do formulário capturado.'); // DEBUG
+    // B) Temos um doador identificado para esta sessão?
+    const doadorId = sessionStorage.getItem("temp_doador_id");
+    const doadorNome = sessionStorage.getItem("temp_doador_nome");
 
-        // 2. Coleta os valores
-        const nome = document.getElementById('nome').value;
-        const categoria = document.getElementById('categoria').value;
-        const condicao = document.getElementById('condicao').value;
-        const tamanho = document.getElementById('tamanho').value;
-        const descricao = document.getElementById('descricao').value; 
-           
-        // 3. Validação
-        if (!nome || !categoria || !descricao || !condicao || !tamanho) {
-            alert('Por favor, preencha todos os campos obrigatórios.');
-            return; 
-        }
+    if (!doadorId) {
+        alert("Nenhum doador identificado. Por favor, identifique o doador primeiro.");
+        window.location.href = "menu-doador.html"; // Volta para o menu para escolher Login ou Cadastro
+        return;
+    }
 
-        // 4. Monta o DTO
-        const doadorId = localStorage.getItem('user_id');
+    // Feedback visual de quem é o doador (opcional, mas bom pra UX)
+    // Se tiver um lugar no HTML, exibe: document.getElementById('nome-doador-display').innerText = doadorNome;
 
-        const itemData = {
-            nome: nome,
-            categoria: categoria,
-            descricao: descricao,
-            condicao: condicao,
-            tamanho: tamanho,
-            doadorId: doadorId
+    // --- LÓGICA DE SAÍDA DO FLUXO ---
+    function sairDoFluxo() {
+        // Limpa a sessão temporária do doador
+        sessionStorage.removeItem("temp_doador_id");
+        sessionStorage.removeItem("temp_doador_nome");
+        // Volta para o menu do Admin
+        window.location.href = "menu-doador.html";
+    }
+
+    const btnLogout = document.getElementById("btn-logout");
+    if (btnLogout) {
+        btnLogout.innerText = "Cancelar Fluxo"; // Texto mais apropriado
+        btnLogout.onclick = (e) => {
+            e.preventDefault();
+            if(confirm("Cancelar doação e voltar ao menu?")) sairDoFluxo();
         };
+    }
 
-        const token = localStorage.getItem("token_benevo");
+    // --- ENVIO DO FORMULÁRIO ---
+    const formDoacao = document.getElementById('form-doacao');
+    if (formDoacao) {
+        formDoacao.addEventListener('submit', function (event) {
+            event.preventDefault(); 
+            
+            const itemData = {
+                nome: document.getElementById('nome').value,
+                categoria: document.getElementById('categoria').value,
+                descricao: document.getElementById('descricao').value,
+                condicao: document.getElementById('condicao').value,
+                tamanho: document.getElementById('tamanho').value,
+                doadorId: doadorId // Usa o ID da sessão temporária
+            };
 
-        if (!token) {
-            alert('Erro: Nenhum doador logado. Faça login novamente antes de cadastrar um item.');
-            console.error('ERRO: Token do doador não encontrado no localStorage.');
-            return;
-        }
-
-        // 5. Chama a API
-        console.log('Enviando para a API:', itemData); // DEBUG
-        cadastrarItem(itemData, token) // ← agora enviando também o token
-            .then(data => {
-                console.log('Resposta da API:', data); // DEBUG
-                
-                // === MODAL DE SUCESSO ===
-                exibirModalAgradecimento(data.nome);
-
-                formDoacao.reset(); 
-            })
-            .catch(error => {
-                console.error('Erro ao cadastrar item:', error);
-                alert('Erro ao cadastrar item. O item NÃO foi salvo.');
-            });
-    });
+            // Usa o token do ADMIN para autorizar a requisição
+            cadastrarItem(itemData, adminToken)
+                .then(data => {
+                    exibirModalAgradecimento(data.nome, doadorNome, sairDoFluxo);
+                    formDoacao.reset(); 
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert('Erro ao salvar: ' + error.message);
+                });
+        });
+    }
 });
 
-
-/**
- * Modal simples sem HTML extra no arquivo
- * Ele é injetado dinamicamente no final do <body>
- * @param {string} itemNome 
- */
-function exibirModalAgradecimento(itemNome) {
-
-    // Remove modal anterior se existir
-    const modalExistente = document.getElementById("modal-agradecimento");
-    if (modalExistente) modalExistente.remove();
-
-    const nomeDoador = localStorage.getItem('user_nome') || "Doador";
-
+function exibirModalAgradecimento(itemNome, doadorNome, callbackSair) {
     const modal = document.createElement("div");
-    modal.id = "modal-agradecimento";
-    modal.style.position = "fixed";
-    modal.style.top = "0";
-    modal.style.left = "0";
-    modal.style.width = "100%";
-    modal.style.height = "100%";
-    modal.style.background = "rgba(0,0,0,0.6)";
-    modal.style.display = "flex";
-    modal.style.alignItems = "center";
-    modal.style.justifyContent = "center";
-    modal.style.zIndex = "9999";
+    modal.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); display:flex; align-items:center; justify-content:center; z-index:9999;";
 
     modal.innerHTML = `
-        <div style="
-            background: white;
-            padding: 30px;
-            width: 90%;
-            max-width: 380px;
-            border-radius: 14px;
-            text-align: center;
-            font-family: Poppins, sans-serif;
-        ">
-            <h2 style="margin-bottom: 10px;">Obrigado, ${nomeDoador}!</h2>
-            <p>Seu item <strong>${itemNome}</strong> foi registrado com sucesso.</p>
-
-            <button id="btn-fechar-modal" style="
-                margin-top: 25px;
-                background: #7A3EF5;
-                color: white;
-                padding: 12px 25px;
-                border: none;
-                border-radius: 8px;
-                font-size: 16px;
-                cursor: pointer;
-            ">Fechar</button>
+        <div style="background: white; padding: 30px; width: 90%; max-width: 400px; border-radius: 15px; text-align: center; font-family: Poppins, sans-serif;">
+            <i class="fas fa-check-circle" style="font-size: 3rem; color: #28a745; margin-bottom: 15px;"></i>
+            <h2 style="color: #1f365c; margin-bottom: 10px;">Item Registrado!</h2>
+            <p style="color: #555; margin-bottom: 20px;">
+                Doador: <strong>${doadorNome}</strong><br>
+                Item: <strong>${itemNome}</strong>
+            </p>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button id="btn-novo" style="background: #1f365c; color: white; padding: 10px 20px; border:none; border-radius:8px; cursor:pointer;">Novo Item (Mesmo Doador)</button>
+                <button id="btn-sair" style="background: #dc3545; color: white; padding: 10px 20px; border:none; border-radius:8px; cursor:pointer;">Finalizar</button>
+            </div>
         </div>
     `;
 
     document.body.appendChild(modal);
 
-    document.getElementById("btn-fechar-modal").addEventListener("click", () => {
-        modal.remove();
-    });
+    // Novo Item: Apenas fecha o modal, mantém a sessão do doador
+    document.getElementById("btn-novo").onclick = () => modal.remove();
+    
+    // Finalizar: Chama a função de limpeza e sai
+    document.getElementById("btn-sair").onclick = () => callbackSair();
 }

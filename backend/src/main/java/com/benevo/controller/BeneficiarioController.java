@@ -21,6 +21,7 @@ public class BeneficiarioController {
 
     @PostMapping("/registrar")
     public ResponseEntity<?> registrar(@RequestBody Beneficiario b) {
+        // Agora todo beneficiário nasce APROVADO
         return ResponseEntity.ok(service.registrarBeneficiario(b));
     }
 
@@ -37,7 +38,6 @@ public class BeneficiarioController {
         Beneficiario b = benefOpt.get();
 
         if (resultado.equals("OK")) {
-            // CORREÇÃO: Adicionado b.getIdBenevo() no final
             return ResponseEntity.ok(new LoginResponseDTO(
                 b.getId(), 
                 "token_mock_" + b.getId(), 
@@ -51,10 +51,8 @@ public class BeneficiarioController {
                 "nomeCompleto", b.getNome(),
                 "perguntaSeguranca", b.getPerguntaSeguranca()
             ));
-        } else if (resultado.equals("PENDENTE")) {
-             return ResponseEntity.status(401).body("Cadastro ainda em análise.");
         } else {
-            return ResponseEntity.status(401).body("Inconsistência nos dados informados.");
+            return ResponseEntity.status(401).body("Dados incorretos.");
         }
     }
 
@@ -66,7 +64,6 @@ public class BeneficiarioController {
 
         if (service.validarRespostaSeguranca(idBenevo, resposta)) {
             Beneficiario b = service.buscarPorIdBenevo(idBenevo).get();
-            // CORREÇÃO: Adicionado b.getIdBenevo()
             return ResponseEntity.ok(new LoginResponseDTO(
                 b.getId(), 
                 "token_mock_" + b.getId(), 
@@ -78,11 +75,12 @@ public class BeneficiarioController {
         return ResponseEntity.status(401).body("Resposta incorreta.");
     }
     
+    // Busca para ajuda de login (Recuperar ID)
     @GetMapping("/ajuda-login")
     public ResponseEntity<List<Map<String, String>>> buscarAjuda(@RequestParam String busca) {
         List<Beneficiario> encontrados = service.buscarPorDadosGerais(busca);
         List<Map<String, String>> resposta = encontrados.stream()
-            .filter(b -> "Aprovado".equalsIgnoreCase(b.getStatus()))
+            // Removemos o filtro de "Aprovado" pois todos são válidos agora
             .map(b -> Map.of(
                 "idInterno", b.getIdBenevo(),
                 "nome", b.getNome(),
@@ -91,15 +89,5 @@ public class BeneficiarioController {
             ))
             .collect(Collectors.toList());
         return ResponseEntity.ok(resposta);
-    }
-    
-    @GetMapping("/pendentes")
-    public List<Beneficiario> listarPendentes() {
-        return service.buscarPorDadosGerais("").stream().filter(b -> "Pendente".equals(b.getStatus())).toList();
-    }
-    
-    @PutMapping("/aprovar/{id}")
-    public ResponseEntity<?> aprovar(@PathVariable String id) {
-         return ResponseEntity.ok("Aprovado");
     }
 }

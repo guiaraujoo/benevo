@@ -262,6 +262,12 @@ function dispararBuscaComFiltros() {
 // --- 6. INICIALIZAÇÃO E OUVINTES DE EVENTOS (EVENT LISTENERS) ---
 document.addEventListener("DOMContentLoaded", () => {
   // Verifica se todos os elementos essenciais existem
+  const token = localStorage.getItem("token_benevo");
+  if (!token) {
+      alert("Sessão expirada. Faça login novamente.");
+      window.location.href = "index.html";
+      return;
+    }
   if (
     !itemGrid ||
     !inputBusca ||

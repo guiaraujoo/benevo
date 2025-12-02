@@ -66,7 +66,6 @@ function renderizarGrid(itens) {
         const dataFormatada = new Date(item.dataEntrada).toLocaleDateString('pt-BR');
 
         card.innerHTML = `
-            <img src="assets/img/ursinho-dashboard.jpg" class="item-image" alt="Imagem do Item">
             <div class="item-info">
                 <p><strong>${item.nome}</strong></p>
                 <p>Categoria: ${item.categoria}</p>

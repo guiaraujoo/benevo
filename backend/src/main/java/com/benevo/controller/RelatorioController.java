@@ -5,12 +5,13 @@ import com.benevo.model.Doador;
 import com.benevo.model.Item;
 import com.benevo.service.RelatorioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.*; // Importa o CrossOrigin
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
+@CrossOrigin("*") // <--- AQUI ESTÁ A CORREÇÃO (Permite acesso de qualquer lugar)
 public class RelatorioController {
 
     @Autowired

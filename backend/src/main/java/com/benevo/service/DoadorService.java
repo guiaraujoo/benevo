@@ -18,25 +18,24 @@ public class DoadorService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // Registrar novo doador
     public Doador registrarDoador(Doador doador) {
-        if (doador.getEmail() == null || doador.getEmail().isEmpty()) {
-            throw new IllegalArgumentException("O e-mail é obrigatório.");
-        }
-
-        if (doador.getCpfCnpj() == null || doador.getEmail().isEmpty()) {
-            throw new IllegalArgumentException("O CPF é inválido.");
-        }
-
-        if (doadorRepository.findByEmail(doador.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("Já existe um doador com este e-mail.");
-        }
-
-        String senhaCriptografada = passwordEncoder.encode(doador.getSenha());
-        doador.setSenha(senhaCriptografada);
-
-        return doadorRepository.save(doador);
+    if (doador.getEmail() == null || doador.getEmail().isEmpty()) {
+        throw new IllegalArgumentException("O e-mail é obrigatório.");
     }
+
+    if (doador.getCpfCnpj() == null || !ValidarCPF.isCPF(doador.getCpfCnpj())) {
+        throw new IllegalArgumentException("O CPF é inválido ou está formatado incorretamente.");
+    }
+
+    if (doadorRepository.findByEmail(doador.getEmail()).isPresent()) {
+        throw new IllegalArgumentException("Já existe um doador com este e-mail.");
+    }
+
+    String senhaCriptografada = passwordEncoder.encode(doador.getSenha());
+    doador.setSenha(senhaCriptografada);
+
+    return doadorRepository.save(doador);
+}
 
     // Autenticar doador
     public Optional<Doador> autenticarDoador(String email, String senhaPlana) {

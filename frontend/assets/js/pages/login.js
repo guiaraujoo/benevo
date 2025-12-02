@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     // Redireciona com base no TIPO
                     if (data.tipo === 'ADMIN') {
-                        window.location.href = 'dashboard-admin.html';
+                        window.location.href = 'central.html';
                     } else if (data.tipo === 'DOADOR') {
                         // Se um doador logar por aqui (talvez não deva)
                         window.location.href = 'cadastro-item.html'; 

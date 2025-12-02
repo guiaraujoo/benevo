@@ -84,19 +84,23 @@ document.addEventListener("DOMContentLoaded", () => {
         const doadorData = {
             nome: document.getElementById("nome").value,
             email: document.getElementById("email").value,
-            senha: s1,
+            senha: document.getElementById("senha").value,
             cpfCnpj: document.getElementById("cpf").value,
             telefone: document.getElementById("telefone").value
         };
 
         try {
-            await apiRegistrarDoador(doadorData);
+            const novoDoador = await apiRegistrarDoador(doadorData);
             
-            // Abre modal personalizado
-            abrirModalSucesso();
+            // SUCESSO: Define sessão temporária
+            sessionStorage.setItem('temp_doador_id', novoDoador.id);
+            sessionStorage.setItem('temp_doador_nome', novoDoador.nome);
+
+            alert("Cadastro realizado! Redirecionando para registrar o item...");
+            window.location.href = "cadastro-item.html";
             
         } catch (error) {
-            alert("Erro ao cadastrar: " + error.message);
+            alert("Erro: " + error.message);
         }
     });
 });

@@ -1,51 +1,40 @@
 // package com.benevo.config;
 
-// import com.benevo.model.Beneficiario;
-// import com.benevo.model.Doador;
 // import com.benevo.model.Usuario;
-// import com.benevo.repository.BeneficiarioRepository;
-// import com.benevo.repository.DoadorRepository;
 // import com.benevo.repository.UsuarioRepository;
 // import org.springframework.beans.factory.annotation.Autowired;
 // import org.springframework.boot.CommandLineRunner;
+// import org.springframework.security.crypto.password.PasswordEncoder; // Importante
 // import org.springframework.stereotype.Component;
-// import java.util.List;
 
 // @Component
 // public class DataSeeder implements CommandLineRunner {
 
-//     @Autowired private UsuarioRepository usuarioRepository;
-//     @Autowired private DoadorRepository doadorRepository;
-//     @Autowired private BeneficiarioRepository beneficiarioRepository;
-//     @Autowired private PasswordEncoder passwordEncoder;
+//     @Autowired
+//     private UsuarioRepository usuarioRepository;
+
+//     @Autowired
+//     private PasswordEncoder passwordEncoder; // Injeta o criptografador
 
 //     @Override
 //     public void run(String... args) throws Exception {
-//         // Limpar bases para evitar conflito de IDs antigos
-//         beneficiarioRepository.deleteAll(); 
-
-//         if (usuarioRepository.findByLogin("admin").isEmpty()) {
-//             usuarioRepository.save(new Usuario(null, "admin", "123", "ADMIN"));
-//         }
-
-//         if (doadorRepository.findByEmail("doador@teste.com").isEmpty()) {
-//             doadorRepository.save(new Doador("Doador Teste", "000", "999", "doador@teste.com", "123"));
-//         }
-
-//         // Criar Beneficiário no NOVO MODELO
-//         Beneficiario b1 = new Beneficiario(
-//             "José Carlos da Silva",     // Nome
-//             null,                       // Email (Opcional)
-//             null,                       // Telefone (Opcional)
-//             "Recife",                   // Bairro/Cidade (Chave de login fácil)
-//             "Qual o nome do meu cachorro?", // Pergunta Customizada
-//             "Rex",                      // Resposta
-//             List.of("Roupas", "Comida")
-//         );
-//         b1.setIdBenevo("JOSE-123");
-//         b1.setStatus("Aprovado");
-//         beneficiarioRepository.save(b1);
         
-//         System.out.println(">>> DATA SEEDER: Beneficiário criado. ID: JOSE-123 | Senha(Bairro): Recife | Pergunta: Rex");
+//         // Verifica se o admin já existe. Se não, cria com SENHA CRIPTOGRAFADA.
+//         if (usuarioRepository.findByLogin("admin").isEmpty()) {
+            
+//             // AQUI ESTÁ A CORREÇÃO: encode("123")
+//             String senhaHash = passwordEncoder.encode("123");
+            
+//             usuarioRepository.save(new Usuario(null, "admin", senhaHash, "ADMIN"));
+//             System.out.println(">>> DATA SEEDER: Admin criado com senha criptografada!");
+//         } else {
+//             // Opcional: Se o admin já existe mas está com a senha errada (texto plano),
+//             // você pode forçar a atualização descomentando as linhas abaixo:
+            
+//             Usuario admin = usuarioRepository.findByLogin("admin").get();
+//             admin.setSenha(passwordEncoder.encode("123"));
+//             usuarioRepository.save(admin);
+//             System.out.println(">>> DATA SEEDER: Senha do Admin atualizada para BCrypt!");
+//         }
 //     }
 // }
