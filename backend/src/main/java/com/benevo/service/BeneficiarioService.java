@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.Random;
+import java.util.regex.Pattern;
+import java.text.Normalizer;
 import java.util.List;
 
 @Service
@@ -18,16 +20,30 @@ public class BeneficiarioService {
     public Beneficiario registrarBeneficiario(Beneficiario benef) {
         benef.setStatus("Aprovado");
         
-        // LÓGICA DE ID FÁCIL (Ex: MAR-824)
+        // 1. Pega o nome, remove espaços extras
+        String nomeLimpo = (benef.getNome() != null) ? benef.getNome().trim() : "USR";
+        
+        // 2. Remove acentos (Normalização)
+        String nomeSemAcento = Normalizer.normalize(nomeLimpo, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        nomeSemAcento = pattern.matcher(nomeSemAcento).replaceAll("");
+        
+        // 3. Remove caracteres não-letras que sobraram
+        nomeSemAcento = nomeSemAcento.replaceAll("[^a-zA-Z]", "");
+
+        // 4. Pega as 3 primeiras letras (ou completa com X se for curto)
         String prefixo = "USR";
-        if (benef.getNome() != null && benef.getNome().length() >= 3) {
-            prefixo = benef.getNome().substring(0, 3).toUpperCase();
-            // Remove espaços se houver (ex: "A B" -> "AB")
-            prefixo = prefixo.replaceAll("\\s+", "");
+        if (nomeSemAcento.length() >= 3) {
+            prefixo = nomeSemAcento.substring(0, 3).toUpperCase();
+        } else {
+            prefixo = (nomeSemAcento + "XXX").substring(0, 3).toUpperCase();
         }
         
-        int numeroAleatorio = new Random().nextInt(900) + 100; // Gera entre 100 e 999
-        String idFacil = prefixo + "-" + numeroAleatorio;
+        // 5. Gera 3 números aleatórios
+        int numeroAleatorio = new Random().nextInt(900) + 100; // Garante 3 dígitos (100-999)
+        
+        // 6. Formato Final: JOA936 (Sem hífen)
+        String idFacil = prefixo + numeroAleatorio;
 
         benef.setIdBenevo(idFacil); 
         return beneficiarioRepository.save(benef);

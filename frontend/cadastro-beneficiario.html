@@ -50,46 +50,26 @@
                     <label>Resposta:</label>
                     <input type="text" id="resposta" required placeholder="Sua resposta aqui">
                 </div>
-                <button type="submit" class="btn-cadastrar">Solicitar Cadastro</button>
+                <button type="submit" class="btn-cadastrar">Realizar Cadastro</button>
             </form>
         </div>
     </main>
     
    <!-- MODAL DE SUCESSO DO CADASTRO -->
 <div id="modal-sucesso-cadastro" class="modal">
-    <div class="modal-sucesso-content">
-        <i class="fas fa-check-circle success-icon"></i>
+        <div class="modal-sucesso-content">
+            <i class="fas fa-check-circle success-icon"></i>
 
-        <h3>Cadastro Realizado!</h3>
-        <p>Seu ID é:</p>
+            <h3>Cadastro Realizado!</h3>
+            <p>Seu ID é:</p>
 
-        <h1 id="id-gerado" style="font-size: 3rem; color:#1f365c; margin-bottom:20px;">
-            <!-- ID vem pelo JS -->
-        </h1>
+            <h1 id="id-gerado" style="font-size: 3rem; color:#1f365c; margin-bottom:20px;">
+                </h1>
 
-        <button class="btn-modal-ok" id="btn-fechar-modal">OK</button>
+            <button class="btn-modal-ok" id="btn-fechar-modal">OK</button>
+        </div>
     </div>
-</div>
-<script>
-document.getElementById("form-cad-beneficiario").addEventListener("submit", function(e) {
-    e.preventDefault();
 
-    // simulação: gerar ID (troque pelo ID real do backend)
-    const novoID = Math.floor(Math.random() * 90000) + 10000;
-
-    // coloca o ID no modal
-    document.getElementById("id-gerado").textContent = novoID;
-
-    // mostra modal
-    document.getElementById("modal-sucesso-cadastro").classList.add("visivel");
-});
-
-// fechar modal
-document.getElementById("btn-fechar-modal").addEventListener("click", function() {
-    document.getElementById("modal-sucesso-cadastro").classList.remove("visivel");
-});
-</script>
-       <script type="module" src="assets/js/pages/cadastro-beneficiario.js"></script>
- 
+    <script type="module" src="assets/js/pages/cadastro-beneficiario.js"></script>
 </body>
 </html>

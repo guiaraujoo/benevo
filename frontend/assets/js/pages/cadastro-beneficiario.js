@@ -1,9 +1,9 @@
 import { apiRegistrarBeneficiario } from '../services/api.js';
 
-// 1. Obtenção dos elementos do Modal
+// 1. Obtenção dos elementos do Modal (CORRIGIDO PARA BATER COM O HTML)
 const modalSucesso = document.getElementById('modal-sucesso-cadastro');
-const beneficiaryIdDisplay = document.getElementById('beneficiaryIdDisplay');
-const btnEntendido = document.getElementById('btn-entendido-cadastro');
+const beneficiaryIdDisplay = document.getElementById('id-gerado'); // Era 'beneficiaryIdDisplay'
+const btnEntendido = document.getElementById('btn-fechar-modal'); // Era 'btn-entendido-cadastro'
 
 function mostrarModalSucesso(id) {
     beneficiaryIdDisplay.textContent = id;
@@ -12,11 +12,14 @@ function mostrarModalSucesso(id) {
 
 function fecharModalSucesso() {
     modalSucesso.classList.remove('visivel');
+    // Redireciona para o login para que ele possa usar o novo ID
     window.location.href = 'login-beneficiario.html'; 
 }
 
-btnEntendido.addEventListener('click', fecharModalSucesso);
-
+// Agora 'btnEntendido' não é mais null, então o addEventListener vai funcionar
+if (btnEntendido) {
+    btnEntendido.addEventListener('click', fecharModalSucesso);
+}
 
 document.getElementById("form-cad-beneficiario").addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -40,21 +43,22 @@ document.getElementById("form-cad-beneficiario").addEventListener("submit", asyn
         email: document.getElementById("email").value || null,
         telefone: document.getElementById("telefone").value || null,
         perguntaSeguranca: document.getElementById("pergunta").value,
-        respostaSeguranca: document.getElementById("resposta").value, // Adicionei resposta para completar o objeto
+        respostaSeguranca: document.getElementById("resposta").value,
     };
 
     try {
         const resultado = await apiRegistrarBeneficiario(data); 
 
-        mostrarModalSucesso(resultado.id); 
+        // IMPORTANTE: Exibe o ID amigável (ex: JOA936) e não o ID do banco
+        mostrarModalSucesso(resultado.idBenevo); 
 
     } catch (error) {
         alert("Erro no cadastro: " + (error.message || "Tente novamente mais tarde."));
         console.error("Detalhes do erro:", error);
-    } finally {
-        if (!modalSucesso.classList.contains('visivel')) {
-            btnCadastrar.disabled = false;
-            btnCadastrar.textContent = 'Solicitar Cadastro';
-        }
+        // Reativa o botão em caso de erro
+        btnCadastrar.disabled = false;
+        btnCadastrar.textContent = 'Solicitar Cadastro';
     }
+    // Nota: O 'finally' foi removido porque queremos manter o botão desabilitado
+    // se der sucesso, para evitar múltiplos envios enquanto o modal está aberto.
 });

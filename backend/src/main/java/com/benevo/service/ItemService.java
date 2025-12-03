@@ -58,6 +58,8 @@ public class ItemService {
             criterios.add(Criteria.where("condicao").is(condicao));
         }
 
+        criterios.add(Criteria.where("status").is("Disponível"));
+
         // Adiciona critérios à query se existirem
         if (!criterios.isEmpty()) {
             query.addCriteria(new Criteria().andOperator(criterios.toArray(new Criteria[0])));
@@ -184,7 +186,8 @@ public class ItemService {
             throw new RuntimeException("Item indisponível. Status atual: " + item.getStatus());
         }
 
-        item.setStatus("Aguardando Retirada");
+        item.setStatus("Doado"); // Status final imediato
+    
         item.setBeneficiarioResgateId(beneficiarioId);
 
         return itemRepository.save(item);
